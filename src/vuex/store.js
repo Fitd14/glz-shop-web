@@ -3,8 +3,10 @@ import Vuex from 'vuex';
 import * as actions from './actions';
 import * as mutations from './mutations';
 import * as getters from './getters';
+import VueResource from 'vue-resource';
 
 Vue.use(Vuex);
+Vue.use(VueResource);
 
 export default new Vuex.Store({
   state: {
