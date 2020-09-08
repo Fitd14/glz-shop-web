@@ -37,7 +37,7 @@ export const post = (url, body) => {
 };
 
 export const put = (url, body) => {
-  Vue.http.put(apiUrl + url, body).then((response) => {
+  Vue.http.put(apiUrlUrl + url, body).then((response) => {
     setSuccessMessage(response);
   }, (response) => {
     setErrorMessage(response);
@@ -45,7 +45,7 @@ export const put = (url, body) => {
 };
 
 export const del = (url) => {
-  Vue.http.put(apiUrl + url).then((response) => {
+  Vue.http.put(apiUrlUrl + url).then((response) => {
     setSuccessMessage(response.message);
   }, (response) => {
     setErrorMessage(response.message);

@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "axios": "^0.20.0",
+        "iview": "^3.5.4",
         "v-distpicker": "^1.0.17",
         "view-design": "^4.3.2",
         "vue": "^2.5.2",
