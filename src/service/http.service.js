@@ -3,7 +3,7 @@ import VueResource from 'vue-resource';
 import { Message } from 'view-design';
 
 Vue.use(VueResource);
-let apiUrlUrl = 'http://localhost:80';
+let apiUrlUrl = 'http://localhost:7000';
 
 export const setErrorMessage = (message) => {
   Message.error({
