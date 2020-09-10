@@ -2,95 +2,142 @@
   <div>
     <div class="add-container">
       <div class="add-title">
-        <h1>添加收货地址</h1>
+        <h1>添加/更新收货地址</h1>
       </div>
       <div class="add-box">
         <Form :model="formData" label-position="left" :label-width="100" :rules="ruleInline">
+          <FormItem label="" prop="userId">
+            <i-input id="userId" v-model="formData.userId" size="large"></i-input>
+          </FormItem>
           <FormItem label="收件人" prop="name">
             <i-input v-model="formData.name" size="large"></i-input>
           </FormItem>
           <FormItem label="收件地区" prop="address">
-            <Distpicker :province="formData.province" :city="formData.city" :area="formData.area" @province="getProvince" @city="getCity" @area="getArea"></Distpicker>
+          <!--  <v-distpicker :province="formData.province" :city="formData.city" :area="formData.area"></v-distpicker>-->
+            <Distpicker :province="formData.province" :city="formData.city" :area="formData.area"
+                        @province="getProvince" @city="getCity" @area="getArea"></Distpicker>
           </FormItem>
-          <FormItem label="收件地址" prop="address">
-            <i-input v-model="formData.address" size="large"></i-input>
+          <FormItem label="收件地址" prop="region">
+            <i-input v-model="formData.region" size="large"></i-input>
           </FormItem>
           <FormItem label="手机号码" prop="phone">
             <i-input v-model="formData.phone" size="large"></i-input>
           </FormItem>
           <FormItem label="邮政编码" prop="postalcode">
-            <i-input v-model="formData.postalcode" size="large"></i-input>
+            <i-input v-model="formData.postCode" size="large"></i-input>
           </FormItem>
         </Form>
       </div>
       <div class="add-submit">
-        <Button type="primary">添加地址</Button>
+        <Button type="primary" v-on:click="aaa(formData)">添加/更新地址</Button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Distpicker from 'v-distpicker';
-export default {
-  name: 'AddAddress',
-  data () {
-    return {
-      formData: {
-        name: '',
-        address: '',
-        phone: '',
-        postalcode: '',
-        province: '广东省',
-        city: '广州市',
-        area: '天河区'
-      },
-      ruleInline: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        address: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ],
-        postalcode: [
-          { required: true, message: '请输入邮政编码', trigger: 'blur' }
-        ],
-        phone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' },
-          { type: 'string', pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: '手机号格式出错', trigger: 'blur' }
-        ]
+  import Distpicker from 'v-distpicker';
+  import {mapActions} from 'vuex';
+  import {addShipAddress, loadAddress} from '../../vuex/actions';
+  import axios from 'axios';
+  import router from '../../router';
+    const url = 'http://localhost:8070';
+  export default {
+    name: 'AddAddress',
+    data() {
+      return {
+        id: 0,
+        formData: {
+          userId: '1',
+          name: '',
+          postCode: '',
+          detailAddress: '',
+          phone: '',
+          province: '',
+          city: '',
+          area: '',
+          region: ''
+        },
+        ruleInline: {
+          name: [
+            {required: true, message: '请输入姓名', trigger: 'blur'}
+          ],
+          detailAddress: [
+            {required: true, message: '请输入地址', trigger: 'blur'}
+          ],
+          postCode: [
+            {required: true, message: '请输入邮政编码', trigger: 'blur'}
+          ],
+          phone: [
+            {required: true, message: '手机号不能为空', trigger: 'blur'},
+            {type: 'string', pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: '手机号格式出错', trigger: 'blur'}
+          ]
+        }
+      };
+    },
+    created() {
+      this.id = this.$route.params.id;
+      console.dir(this.id);
+      if (this.id != null) {
+        axios.get(url + '/ship/area/id/' + this.id).then(res => {
+          if (res.data.data != null) {
+            this.formData = res.data.data;
+            console.dir(this.formData);
+          } else {
+            console.dir('aaa');
+          }
+        });
       }
-    };
-  },
-  methods: {
-    getProvince (data) {
-      this.formData.province = data.value;
     },
-    getCity (data) {
-      this.formData.city = data.value;
+    methods: {
+      ...mapActions(['loadAddress', 'addShipAddress', 'UserLogin']),
+      aaa(data) {
+        console.dir(data);
+        axios.post(url + '/ship/add', data).then(res => {
+          console.dir(res.data);
+        });
+      },
+      getData(dat) {
+        console.dir('aaa');
+        console.dir(this.formData);
+        console.dir(dat);
+        this.$http.post('http://localhost:8070/ship/add', dat).then(function (reponse) {
+        });
+      },
+      getProvince(data) {
+        this.formData.province = data.value;
+      },
+      getCity(data) {
+        this.formData.city = data.value;
+      },
+      getArea(data) {
+        this.formData.area = data.value;
+      }
     },
-    getArea (data) {
-      this.formData.area = data.value;
+    components: {
+      Distpicker
     }
-  },
-  components: {
-    Distpicker
-  }
-};
+  };
 </script>
 
 <style scoped>
-.add-container {
-  margin: 15px auto;
-  width: 60%;
-  min-width: 600px;
-}
-.add-title {
-  margin-bottom: 15px;
-  text-align: center;
-}
-.add-submit {
-  display: flex;
-  justify-content: center;
-}
+  .add-container {
+    margin: 15px auto;
+    width: 60%;
+    min-width: 600px;
+  }
+
+  .add-title {
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .add-submit {
+    display: flex;
+    justify-content: center;
+  }
+
+  #userId{
+    display: none;
+  }
 </style>

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Index from '@/components/Index';
+
 const Login = resolve => require(['@/components/Login'], resolve);
 const SignUp = resolve => require(['@/components/SignUp'], resolve);
 const CheckPhone = resolve => require(['@/components/signUp/CheckPhone'], resolve);
@@ -15,6 +16,7 @@ const PayDone = resolve => require(['@/components/PayDone'], resolve);
 const Freeback = resolve => require(['@/components/Freeback'], resolve);
 const Home = resolve => require(['@/components/Home'], resolve);
 const MyAddress = resolve => require(['@/components/home/MyAddress'], resolve);
+const OrderItem = resolve => require(['@/components/home/OrderItem'], resolve);
 const AddAddress = resolve => require(['@/components/home/AddAddress'], resolve);
 const MyOrder = resolve => require(['@/components/home/MyOrder'], resolve);
 const MyShoppingCart = resolve => require(['@/components/home/MyShoppingCart'], resolve);
@@ -112,7 +114,22 @@ export default new Router({
           component: MyAddress
         },
         {
+          path: 'orderItem',
+          name: 'OrderItem',
+          component: OrderItem
+        },
+        {
+          path: 'orderItem/:orderNo',
+          name: 'OrderItem',
+          component: OrderItem
+        },
+        {
           path: 'addAddress',
+          name: 'AddAddress',
+          component: AddAddress
+        },
+        {
+          path: 'addAddress/:id',
           name: 'AddAddress',
           component: AddAddress
         },

@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import { Message } from 'view-design';
+import {Message} from 'view-design';
 
 Vue.use(VueResource);
-let apiUrlUrl = 'http://localhost:80';
+let apiUrlUrl = 'http://localhost:8070';
 
 export const setErrorMessage = (message) => {
   Message.error({
@@ -18,10 +18,10 @@ export const setSuccessMessage = (message) => {
 };
 
 export const get = (url) => {
-  Vue.http.get(apiUrlUrl + url).then((response) => {
+  return Vue.http.get(apiUrlUrl + url).then((response) => {
     // 相应成功的回调
     setSuccessMessage(response);
-    return response.data;
+    return response.body;
   }, (response) => {
     // 相应失败的回调
     setErrorMessage(response);
