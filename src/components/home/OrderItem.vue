@@ -1,6 +1,10 @@
 <template>
   <div>
     <div>
+      <Button type="primary" @click="goto" style="margin-left: 90%">返回</Button>
+    </div>
+    <div>
+      <br/>
       <el-table :data="datas.slice((currentPage-1)* pageSize,currentPage* pageSize)"
                 :current-page.sync="currentPage"
                 stripe border style="width: 100%">
@@ -17,7 +21,8 @@
         <el-table-column prop="storeId" label="所属店铺"></el-table-column>
       </el-table>
     </div>
-    <div class="block">
+    <div class="block" style="margin-left: 30%">
+      <br/>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"

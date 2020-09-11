@@ -9,18 +9,27 @@
 </template>-->
 <template>
   <div>
-    <Table border :columns="columns" :data="temp" height="450px">
+    <div style="margin-left: 65%">
+      <Button type="primary" @click="unpay(1,0)">待发货</Button>
+      <Button type="primary" @click="unpay(1,1)">待收货</Button>
+      <Button type="primary" @click="getStatus(1,0)">待付款</Button>
+      <Button type="primary" @click="getStatus(1,1)">已付款</Button>
+      <br/>
+    </div>
+    <br/>
+    <Table border :columns="columns" :data="temp" height="500px">
       <template slot-scope="{ row }" slot="action">
         <Button type="primary" size="small" @click="getData(row)" style="margin-right: 5px">详情</Button>
         <Button type="error" size="small" @click="delOrder(row)">删除</Button>
       </template>
     </Table>
     <div>
+      <br/>
       <Page
         :total="dataCount"
         :page-size="pageSize"
-        :page-size-opts="[1, 5, 10, 20]"
         show-sizer class="paging"
+        :page-size-opts=[2,3,5]
         @on-change="changeIndex"
         @on-page-size-change="pageSizes"
       ></Page>
@@ -42,7 +51,7 @@
         // 初始化信息总条数
         dataCount: 0,
         // 每页显示多少条
-        pageSize: 1,
+        pageSize: 2,
         // 当前页码
         page: 1,
         order: [],
@@ -153,9 +162,25 @@
     },
     computed: {},
     methods: {
+      unpay(userId, payStatus) {
+        let aaa = url + '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus;
+        console.dir(aaa);
+        axios.get(url + '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
+          console.dir(res)
+          this.order = res.data.data;
+          this.dataCount = this.order.length;
+          this.tempPage();
+        });
+      },
+      getStatus(userId, payStatus) {
+        axios.get(url + '/order/status?userId=' + userId + '&status=' + payStatus).then(res => {
+          this.order = res.data.data;
+          this.dataCount = this.order.length;
+          this.tempPage();
+        });
+      },
       tempPage() {
         this.temp = this.order;
-        this.dataCount = this.order.length;
         if (this.dataCount < this.pageSize) {
           this.temp = this.order;
         } else {
@@ -163,10 +188,12 @@
         }
       },
       changeIndex(index) {
-        this.page = index;
+        console.dir(index),
+          this.page = index;
         let _start = (index - 1) * this.pageSize;
         let _end = index * this.pageSize;
         this.temp = this.order.slice(_start, _end);
+        console.dir(this.temp);
       },
       pageSizes(index) {
         let _start = (this.page - 1) * index;
