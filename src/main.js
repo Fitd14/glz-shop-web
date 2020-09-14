@@ -5,8 +5,10 @@ import App from './App';
 import router from './router';
 import ViewUi from 'view-design';
 import 'iview/dist/styles/iview.css';
+import VueResource from 'vue-resource';
 
 Vue.use(ViewUi);
+Vue.use(VueResource);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

@@ -36,6 +36,7 @@
 <script>
 import store from '@/vuex/store';
 import { mapMutations, mapActions } from 'vuex';
+
 export default {
   name: 'Login',
   data () {
