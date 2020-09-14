@@ -36,14 +36,15 @@
 <script>
 import store from '@/vuex/store';
 import { mapMutations, mapActions } from 'vuex';
-
+import axios from 'axios';
 export default {
   name: 'Login',
   data () {
     return {
       formDate: {
         username: '',
-        password: ''
+        password: '',
+        url: '11111'
       },
       ruleInline: {
         username: [
@@ -64,7 +65,7 @@ export default {
       console.log(this.formDate.username);
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.login(father.formDate).then(result => {
+          this.login(father.formDate, 'adddd').then(result => {
             if (result) {
               this.$Message.success('登录成功');
               father.$router.push('/');

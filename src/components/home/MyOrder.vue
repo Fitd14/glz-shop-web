@@ -1,89 +1,206 @@
-<template>
+<!--<template>
   <div>
     <Table border :columns="columns" :data="order" size="large" no-data-text="你还有订单，快点去购物吧"></Table>
     <div class="page-size">
       <Page :total="100" show-sizer></Page>
     </div>
   </div>
+
+</template>-->
+<template>
+  <div>
+    <Table border :columns="columns" :data="temp" height="450px">
+      <template slot-scope="{ row }" slot="action">
+        <Button type="primary" size="small" @click="getData(row)" style="margin-right: 5px">详情</Button>
+        <Button type="error" size="small" @click="delOrder(row)">删除</Button>
+      </template>
+    </Table>
+    <div>
+      <Page
+        :total="dataCount"
+        :page-size="pageSize"
+        :page-size-opts="[1, 5, 10, 20]"
+        show-sizer class="paging"
+        @on-change="changeIndex"
+        @on-page-size-change="pageSizes"
+      ></Page>
+    </div>
+  </div>
 </template>
 
+
 <script>
-export default {
-  name: 'MyOrder',
-  data () {
-    return {
-      order: [{
-        order_id: 1529931938150,
-        goods_id: 1529931938150,
-        count: 1,
-        img: 'static/img/goodsDetail/pack/1.jpg',
-        package: '4.7英寸-深邃蓝',
-        price: 28,
-        title: '苹果8/7手机壳iPhone7 Plus保护壳全包防摔磨砂硬外壳',
-        createAt: '2018-06-06 20:06:08'
-      }],
-      columns: [
-        {
-          title: '订单号',
-          key: 'order_id',
-          width: 180,
-          align: 'center'
-        },
-        {
-          title: '图片',
-          key: 'img',
-          width: 86,
-          render: (h, params) => {
-            return h('div', [
-              h('img', {
-                attrs: {
-                  src: params.row.img
-                }
-              })
-            ]);
+  import axios from 'axios';
+  import store from '@/vuex/store';
+
+  const url = 'http://localhost:8070';
+  export default {
+    inject: ['reload'],
+    name: 'MyOrder',
+    data() {
+      return {
+        // 初始化信息总条数
+        dataCount: 0,
+        // 每页显示多少条
+        pageSize: 1,
+        // 当前页码
+        page: 1,
+        order: [],
+        // 临时存放
+        temp: [],
+        columns: [
+          {
+            title: '订单号',
+            key: 'orderNo',
+            fixed: 'left',
+            width: 100
           },
-          align: 'center'
-        },
-        {
-          title: '标题',
-          key: 'title',
-          align: 'center'
-        },
-        {
-          title: '套餐',
-          width: 198,
-          key: 'package',
-          align: 'center'
-        },
-        {
-          title: '数量',
-          key: 'count',
-          width: 68,
-          align: 'center'
-        },
-        {
-          title: '价格',
-          width: 68,
-          key: 'price',
-          align: 'center'
-        },
-        {
-          title: '购买时间',
-          width: 120,
-          key: 'createAt',
-          align: 'center'
+          {
+            title: 'userId',
+            key: 'userId',
+            render: (h, params) => {
+              return h('Icon', {
+                style: {
+                  display: 'none'
+                }
+              }, params.row.userId)
+            }
+          },
+          {
+            title: '支付金额',
+            key: 'payment',
+            width: 100
+          },
+          {
+            title: '支付状态',
+            key: 'paymentStatus',
+            width: 100,
+            render: (h, params) => {
+              let status = params.row.paymentStatus;
+              if (status === 0) {
+                return h('p', '未支付')
+              }
+              if (status === 1) {
+                return h('p', '已支付')
+              }
+            }
+          },
+          {
+            title: '发货状态',
+            key: 'paymentTime',
+            width: '170px'
+          },
+          {
+            title: '创建时间',
+            key: 'createTime',
+            width: '170px'
+          },
+          {
+            title: '更新时间',
+            key: 'updateTime',
+            width: '170px'
+          },
+          {
+            title: '收件人',
+            key: 'shipName',
+            width: 100
+          },
+          {
+            title: '邮政编码',
+            key: 'postCode',
+            width: 100
+          },
+          {
+            title: '联系方式',
+            key: 'phone',
+            width: 100
+          },
+          {
+            title: '省份',
+            key: 'province',
+            width: 100
+          },
+          {
+            title: '城市',
+            key: 'city',
+            width: 100
+          },
+          {
+            title: '详细地区',
+            key: 'region',
+            width: 100
+          },
+          {
+            title: '具体地址',
+            key: 'detailAddress',
+            width: 100
+          },
+          {
+            title: '操作栏',
+            slot: 'action',
+            width: 150,
+            align: 'center',
+            fixed: 'right'
+          }
+        ]
+      };
+    },
+    created() {
+      axios.get(url + '/order/1').then(res => {
+        this.order = res.data.data.data;
+        this.tempPage();
+      });
+    },
+    computed: {},
+    methods: {
+      tempPage() {
+        this.temp = this.order;
+        this.dataCount = this.order.length;
+        if (this.dataCount < this.pageSize) {
+          this.temp = this.order;
+        } else {
+          this.temp = this.order.slice(0, this.pageSize);
         }
-      ]
-    };
-  }
-};
+      },
+      changeIndex(index) {
+        this.page = index;
+        let _start = (index - 1) * this.pageSize;
+        let _end = index * this.pageSize;
+        this.temp = this.order.slice(_start, _end);
+      },
+      pageSizes(index) {
+        let _start = (this.page - 1) * index;
+        let _end = this.page * index;
+        this.temp = this.order.slice(_start, _end);
+      },
+      getData(row) {
+        this.$router.push({name: 'OrderItem', params: {orderNo: row.orderNo}})
+      },
+      delOrder(row) {
+        console.log(row.orderNo);
+        this.$confirm('是否要删除该品牌', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          axios.get(url + '/order/del/' + row.orderNo).then(res => {
+            if (res.data.code === '200') {
+              this.reload();
+              console.dir('success');
+            }
+          });
+        });
+      }
+    }
+  };
+
 </script>
 
 <style scoped>
-.page-size {
-  margin: 15px 0px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
+  .page-size {
+    margin: 15px 0px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 </style>

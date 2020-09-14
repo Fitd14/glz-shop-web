@@ -7,14 +7,23 @@ import ViewUi from 'view-design';
 import 'iview/dist/styles/iview.css';
 import VueResource from 'vue-resource';
 
+Vue.component('v-distpicker', VDistpicker)
+Vue.use(ElementUI);
 Vue.use(ViewUi);
 Vue.use(VueResource);
 Vue.config.productionTip = false;
-
+Vue.use(require('vue-moment'));
+Vue.prototype.moment = moment;
+Vue.filter('dateFormat', function(dateStr, pattern='YYYY-MM-DD'){
+  return moment(dateStr).format(pattern);
+});
+Vue.filter('moneyFormat', function(money, pattern='¥'){
+  return moment(money).format(pattern + money);
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 });

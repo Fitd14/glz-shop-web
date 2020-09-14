@@ -26,6 +26,10 @@ module.exports = {
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }]
+    "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }],
+    "no-unused-vars": 'off',
+    "space-before-function-paren":"off",//取消函数前的空格
+    "object-curly-spacing":"off",//取消括号内的间距一致
+    'indent': 'off',//取消对每行前空格的检测（该换行还是要换的）
   }
 }
