@@ -6,6 +6,9 @@
       </div>
       <div class="add-box">
         <Form :model="formData" label-position="left" :label-width="100" :rules="ruleInline">
+          <FormItem label="" prop="id">
+            <i-input id="id" v-model="formData.id" size="large"></i-input>
+          </FormItem>
           <FormItem label="" prop="userId">
             <i-input id="userId" v-model="formData.userId" size="large"></i-input>
           </FormItem>
@@ -13,7 +16,7 @@
             <i-input v-model="formData.name" size="large"></i-input>
           </FormItem>
           <FormItem label="收件地区" prop="address">
-          <!--  <v-distpicker :province="formData.province" :city="formData.city" :area="formData.area"></v-distpicker>-->
+            <!--  <v-distpicker :province="formData.province" :city="formData.city" :area="formData.area"></v-distpicker>-->
             <Distpicker :province="formData.province" :city="formData.city" :area="formData.area"
                         @province="getProvince" @city="getCity" @area="getArea"></Distpicker>
           </FormItem>
@@ -41,13 +44,15 @@
   import {addShipAddress, loadAddress} from '../../vuex/actions';
   import axios from 'axios';
   import router from '../../router';
-    const url = 'http://localhost:8070';
+
+  const url = 'http://localhost:8070';
   export default {
     name: 'AddAddress',
     data() {
       return {
         id: 0,
         formData: {
+          id: '',
           userId: '1',
           name: '',
           postCode: '',
@@ -76,7 +81,7 @@
       };
     },
     created() {
-      this.id = this.$route.params.id;
+      this.id = this.$route.query.id;
       console.dir(this.id);
       if (this.id != null) {
         axios.get(url + '/ship/area/id/' + this.id).then(res => {
@@ -93,9 +98,30 @@
       ...mapActions(['loadAddress', 'addShipAddress', 'UserLogin']),
       aaa(data) {
         console.dir(data);
-        axios.post(url + '/ship/add', data).then(res => {
-          console.dir(res.data);
-        });
+        if (data.area !== '' && data.city !== '' && data.region !== ''
+          && data.name !== '' && data.postCode !== '') {
+          let i = data.id;
+          axios.post(url + '/ship/add', data).then(res => {
+            console.dir(res.data);
+            if (i !== '') {
+              this.$message({
+                message: '恭喜你，更新成功',
+                type: 'success'
+              });
+            } else {
+              this.$message({
+                message: '恭喜你，添加成功',
+                type: 'success'
+              });
+            }
+          });
+        } else {
+          const h = this.$createElement;
+          this.$notify({
+            title: '失败',
+            message: h('i', {style: 'color: red'}, '请填写完整信息')
+          });
+        }
       },
       getData(dat) {
         console.dir('aaa');
@@ -137,7 +163,11 @@
     justify-content: center;
   }
 
-  #userId{
+  #userId {
+    display: none;
+  }
+
+  #id {
     display: none;
   }
 </style>

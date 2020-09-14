@@ -16,21 +16,31 @@
         <div class="address-box">
           <div class="address-check">
             <div class="address-check-name">
-              <span><Icon type="ios-checkmark-outline"></Icon> {{checkAddress.name}}</span>
+              <span><Icon type="ios-checkmark-outline"></Icon> {{temp.name}}</span>
             </div>
             <div class="address-detail">
-              <p>{{checkAddress.address}}</p>
+              <p>{{temp.address}}</p>
             </div>
           </div>
           <Collapse>
             <Panel>
               选择地址
               <p slot="content">
-                <RadioGroup vertical size="large" @on-change="changeAddress">
-                  <Radio :label="item.addressId" v-for="(item, index) in address" :key="index">
-                    <span>{{item.name}} {{item.province}} {{item.city}} {{item.address}} {{item.phone}} {{item.postalcode}}</span>
+                <!--   <RadioGroup vertical size="large" @on-change="changeAddress">
+                     <Radio :label="item.addressId" v-for="(item, index) in address" :key="index">
+                       <span>{{item.name}} {{item.province}} {{item.city}} {{item.address}} {{item.phone}} {{item.postalcode}}</span>
+                     </Radio>
+                   </RadioGroup>-->
+                <RadioGroup vertical @on-change="changeModel">
+                  <Radio :label="item.id" v-for="item in shipAddress" :value="item.id" :key="item.id">
+                    <span>{{item.name}}</span>
                   </Radio>
                 </RadioGroup>
+                <!-- <RadioGroup vertical size="large" @on-change="changeModel">
+                   <Radio :label="item.id" v-for="(item, index) in shipAddress" :key="index">
+                     <span>{{item.name}}</span>
+                   </Radio>
+                 </RadioGroup>-->
               </p>
             </Panel>
           </Collapse>
@@ -60,11 +70,13 @@
 </template>
 
 <script>
+  import axios from 'axios';
   import Search from '@/components/Search';
   import GoodsListNav from '@/components/nav/GoodsListNav';
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
 
+  const url = 'http://localhost:8070';
   export default {
     name: 'Order',
     beforeRouteEnter(to, from, next) {
@@ -73,9 +85,19 @@
     },
     created() {
       this.loadAddress();
+      this.getShipAddress(1);
     },
     data() {
       return {
+        disabledSingle: true,
+        disabledGroup: [{name: '爪哇犀牛1'}, {name: '爪哇犀牛2'}, {name: '爪哇犀牛3'}],
+        temp: {
+          id: null,
+          name: '未选择',
+          address: '请选择地址'
+        },
+        userName: 'ez',
+        shipAddress: [],
         goodsCheckList: [],
         columns: [
           {
@@ -165,6 +187,24 @@
             father.checkAddress.address = `${item.name} ${item.province} ${item.city} ${item.address} ${item.phone} ${item.postalcode}`;
           }
         });
+      },
+      changeModel(data) {
+        const father = this;
+        this.shipAddress.forEach(item => {
+          if (item.id === data) {
+            father.temp.id = item.id;
+            father.temp.name = item.name;
+            father.temp.address = item.province;
+            console.dir('----------');
+            console.dir(father.temp.id)
+          }
+        });
+      },
+      getShipAddress(userId) {
+        axios.get(url + '/ship/area/' + userId).then(res => {
+          this.shipAddress = res.data.data;
+          console.dir(this.shipAddress)
+        })
       }
     },
     mounted() {
