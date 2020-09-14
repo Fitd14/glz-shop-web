@@ -149,7 +149,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['loadSeckillsInfo', 'loadCarouselItems', 'loadComputer', 'loadEat', 'loadShoppingCart']),
+    ...mapActions(['loadSeckillsInfo', 'loadCarouselItems', 'loadComputer', 'loadEat', 'loadShoppingCart', 'isLogin']),
     ...mapMutations(['REDUCE_SECKILLS_TIME'])
   },
   computed: {

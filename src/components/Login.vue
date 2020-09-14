@@ -61,14 +61,16 @@ export default {
     ...mapMutations(['SET_USER_LOGIN_INFO']),
     ...mapActions(['login']),
     handleSubmit (name) {
-      const father = this;
-      console.log(this.formDate.username);
+      const formData = new FormData();
+      formData.append('username', this.formDate.username);
+      formData.append('password', this.formDate.password);
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.login(father.formDate, 'adddd').then(result => {
+          this.login(formData).then(result => {
             if (result) {
               this.$Message.success('登录成功');
-              father.$router.push('/');
+              this.$store.state.userInfo.username = result;
+              this.$router.push('/');
             } else {
               this.$Message.error('用户名或密码错误');
             }

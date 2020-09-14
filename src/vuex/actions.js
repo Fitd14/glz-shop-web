@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import {options} from 'vue-resource/src/util';
-import {HttpService, post} from '../service/http.service';
-import {UserLogin, addShipAddress2, province, detailArea} from '../service/base.service';
+import {get, post} from '../service/http.service';
+import store from '../common/store';
 
 Vue.use(VueResource);
 
@@ -716,43 +715,24 @@ export const loadShoppingCart = ({commit}) => {
 // 添加注册用户
 export const addSignUpUser = ({commit}, data) => {
   return new Promise((resolve, reject) => {
-    const userArr = localStorage.getItem('users');
-    let users = [];
-    if (userArr) {
-      users = JSON.parse(userArr);
-    }
-    users.push(data);
-    localStorage.setItem('users', JSON.stringify(users));
+    post('/user/member/save', data).then(resp => {
+
+    });
   });
 };
 
 // 用户登录
 export const login = ({commit}, data) => {
   return new Promise((resolve, reject) => {
-    console.log(resolve);
-    console.log(data.url);
-    // UserLogin(data);
-    if (data.username === 'Gavin' && data.password === '123456') {
-      localStorage.setItem('loginInfo', JSON.stringify(data));
-      commit('SET_USER_LOGIN_INFO', data);
-      resolve(true);
-      return true;
-    }
-    const userArr = localStorage.getItem('users');
-    console.log(userArr);
-    if (userArr) {
-      const users = JSON.parse(userArr);
-      for (const item of users) {
-        if (item.username === data.username) {
-          localStorage.setItem('loginInfo', JSON.stringify(item));
-          commit('SET_USER_LOGIN_INFO', item);
-          resolve(true);
-          break;
-        }
+    post('/auth', data).then(resp => {
+      if (resp.code === '200') {
+        store.commit('set_token', resp.data.token);
+        localStorage.setItem('loginInfo', resp.data.username);
+        resolve(resp.data.username);
+      } else {
+        resolve(false);
       }
-    } else {
-      resolve(false);
-    }
+    });
   });
 };
 
@@ -765,31 +745,16 @@ export const signOut = ({commit}) => {
 // 判断是否登陆
 export const isLogin = ({commit}) => {
   const user = localStorage.getItem('loginInfo');
-  if (user) {
-    commit('SET_USER_LOGIN_INFO', JSON.parse(user));
+  if (user !== null) {
+    // commit('SET_USER_LOGIN_INFO', JSON.parse(user));
+    getUserInfo('1');
   }
 };
 
-// 添加地址
-export const addShipAddress = ({commit}, data) => {
+export const getUserInfo = ({commit}) => {
   return new Promise((resolve, reject) => {
-    console.dir(data);
-    addShipAddress2(data);
-  });
-};
-// 查找所有城市
-export const provinces = ({commit}) => {
-  return new Promise((resolve, reject) => {
-    console.dir();
-    province();
-  });
-};
-
-// 根据用户ID获取该用户的所有收货地址
-export const detailAreas = (id) => {
-   return detailArea(id).then((result) => {
-    console.dir('-----------------');
-    console.dir(result);
-    return result;
+    get('/user/member/getInfo').then(resp => {
+      resolve(resp);
+    });
   });
 };

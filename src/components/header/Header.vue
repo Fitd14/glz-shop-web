@@ -98,6 +98,7 @@
 <script>
 import store from '@/vuex/store';
 import { mapState, mapActions } from 'vuex';
+import {getUserInfo} from '../../vuex/actions';
 export default {
   name: 'M-Header',
   created () {
