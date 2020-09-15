@@ -108,7 +108,7 @@ export default {
   inject: ['reload'],
   data () {
     return {
-      city: '珠海',
+      city: '河南',
       cityArr: [
         ['北京', '上海', '天津', '重庆', '广州'],
         ['深圳', '河南', '辽宁', '吉林', '江苏'],

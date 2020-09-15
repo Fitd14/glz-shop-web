@@ -33,4 +33,26 @@ new Vue({
   store: stores,
   components: {App},
   template: '<App/>'
+  // created () {
+  //   router.beforeEach((to, from, next) => {
+  //     var _this = this;
+  //     // if (to.matched.some(record => record.meta.requireAuth)){  // 判断该路由是否需要登录权限
+  //     if (to.meta.requireAuth && _this.requireAuthNum === 1) {
+  //       console.log(localStorage.getItem('loginInfo'));
+  //       if (JSON.parse(localStorage.getItem('loginInfo')) == null) {
+  //         // console.log('没有登录');
+  //         _this.$message.error('没有登陆');
+  //         _this.$router.push({path: '/login', query: {redirect: to.fullPath}});
+  //         next();
+  //       } else {
+  //         _this.requireAuthNum++;
+  //         _this.$router.push({path: to.fullPath});
+  //         next();
+  //       }
+  //     } else {
+  //       _this.requireAuthNum = 1;
+  //       next();
+  //     }
+  //   });
+  // }
 });
