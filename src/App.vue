@@ -18,7 +18,6 @@
   import Header from '@/components/header/Header';
   import Footer from '@/components/footer/Footer';
   import {Message} from 'view-design';
-
   export default {
     name: 'App',
     data() {

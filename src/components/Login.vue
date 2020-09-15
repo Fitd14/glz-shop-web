@@ -29,6 +29,9 @@
                   </i-input>
               </FormItem>
               <FormItem>
+                <a href="" style="float: right">忘记密码</a>
+              </FormItem>
+              <FormItem>
                   <Button type="error" size="large" @click="handleSubmit('formInline')" long>登录</Button>
               </FormItem>
           </Form>
@@ -42,6 +45,7 @@
 <script>
 import store from '@/vuex/store';
 import { mapMutations, mapActions } from 'vuex';
+
 export default {
   name: 'Login',
   inject: ['reload'],

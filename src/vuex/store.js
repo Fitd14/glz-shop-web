@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     userInfo: { // 用户信息
       username: ''
     },
-    signUpStep: 0, // 登陆步骤
+    signUpStep: 0, // 注册步骤
     marketing: { // 营销
       CarouselItems: [], // 轮播图
       activity: [] // 活动

@@ -716,7 +716,7 @@ export const loadShoppingCart = ({commit}) => {
 export const addSignUpUser = ({commit}, data) => {
   return new Promise((resolve, reject) => {
     post('/user/member/save', data).then(resp => {
-
+      resolve(resp);
     });
   });
 };
@@ -740,6 +740,7 @@ export const login = ({commit}, data) => {
 export const signOut = ({commit}) => {
   localStorage.removeItem('loginInfo');
   commit('SET_USER_LOGIN_INFO', {});
+  post('/logout');
 };
 
 // 判断是否登陆
