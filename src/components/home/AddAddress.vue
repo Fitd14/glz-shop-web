@@ -44,8 +44,9 @@
   import {addShipAddress, loadAddress} from '../../vuex/actions';
   import axios from 'axios';
   import router from '../../router';
+  import {get} from '../../service/http.service'
 
-  const url = 'http://localhost:8070';
+  const url = 'http://localhost:80';
   export default {
     name: 'AddAddress',
     data() {
@@ -84,14 +85,22 @@
       this.id = this.$route.query.id;
       console.dir(this.id);
       if (this.id != null) {
-        axios.get(url + '/ship/area/id/' + this.id).then(res => {
+        /*axios.get(url + '/ship/area/id/' + this.id).then(res => {
           if (res.data.data != null) {
             this.formData = res.data.data;
             console.dir(this.formData);
           } else {
             console.dir('aaa');
           }
-        });
+        });*/
+        get('/ship/area/id/' + this.id).then(res => {
+          if (res.data != null) {
+            this.formData = res.data;
+            console.dir(this.formData);
+          } else {
+            console.dir('aaa');
+          }
+        })
       }
     },
     methods: {
@@ -127,8 +136,9 @@
         console.dir('aaa');
         console.dir(this.formData);
         console.dir(dat);
-        this.$http.post('http://localhost:8070/ship/add', dat).then(function (reponse) {
-        });
+        axios.post('http://localhost:8070/ship/add', dat).then(res => {
+          console.dir(res.data)
+        })
       },
       getProvince(data) {
         this.formData.province = data.value;

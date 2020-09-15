@@ -53,11 +53,14 @@
         </el-table-column>
         <el-table-column prop="payment" label="总价"></el-table-column>
         <el-table-column prop="status" label="发货状态">
+          <template slot-scope="scope">
+            <div v-text="changeStatus(scope.row.status)"></div>
+          </template>
         </el-table-column>
         <el-table-column prop="paymentStatus" label="支付状态">
-          <!--<template slot-scope="scope">
-            <div v-text="setSta(scope.row.paymentStatus)"></div>
-          </template>-->
+          <template slot-scope="scope">
+            <div v-text="setPaymentStatus(scope.row.paymentStatus)"></div>
+          </template>
         </el-table-column>
         <el-table-column prop="shipName" label="收件人"></el-table-column>
         <el-table-column prop="phone" label="联系方式"></el-table-column>
@@ -66,7 +69,7 @@
         <el-table-column prop="region" label="收货地区"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="更新时间"></el-table-column>
-        <el-table-column label="操作" width="200px" fixed="right">
+        <el-table-column label="操作" width="150px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini" @click="getData(scope.row)">
@@ -96,9 +99,10 @@
 
 <script>
   import axios from 'axios';
+  import {get} from '../../service/http.service';
   import store from '@/vuex/store';
 
-  const url = 'http://localhost:8070';
+  const url = 'http://localhost:80';
   export default {
     inject: ['reload'],
     name: 'MyOrder',
@@ -231,10 +235,30 @@
     },
     computed: {},
     methods: {
+      setPaymentStatus(paymentStatus){
+        if(paymentStatus === 1){
+          return '已支付';
+        }else {
+        return '未支付';
+        }
+      },
+      changeStatus(val) {
+        if (val === 0) {
+          return '未发货'
+        } else if (val === 1) {
+          return '已发货';
+        } else if (val === 2) {
+          return '已申请退货';
+        } else if (val === 3) {
+          return '已退货';
+        } else {
+          return '退货失败';
+        }
+      },
       begin() {
-        axios.get(url + '/order/1').then(res => {
+        get('/order/1').then(res => {
           console.dir(res.data);
-          this.datas = res.data.data.data;
+          this.datas = res.data.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
         });
@@ -252,7 +276,7 @@
       //前端搜索功能需要区分是否检索,因为对应的字段的索引不同
       //用两个变量接收currentChangePage函数的参数
       doFilter() {
-        if (this.tableDataName == "") {
+        if (this.tableDataName === "") {
           this.$message.warning("查询条件不能为空！");
           this.begin();
           return;
@@ -285,14 +309,15 @@
       },
       unpay(userId, payStatus) {
         axios.get(url + '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
-          this.datas = res.data.data;
+          console.dir(res)
+          this.datas = res.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
         });
       },
       getStatus(userId, status) {
         axios.get(url + '/order/status?userId=' + userId + '&status=' + status).then(res => {
-          this.datas = res.data.data;
+          this.datas = res.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
         });

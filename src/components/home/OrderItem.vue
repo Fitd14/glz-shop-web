@@ -56,7 +56,7 @@
   import {mapState, mapActions} from 'vuex';
   import router from '../../router';
 
-  const url = 'http://localhost:8070';
+  const url = 'http://localhost:80';
   const userId = 1;
   export default {
     inject: ['reload'],

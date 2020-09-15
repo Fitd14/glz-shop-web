@@ -47,10 +47,11 @@
 <script>
   import axios from 'axios';
   import store from '@/vuex/store';
+  import {get} from "../../service/http.service";
   import {mapState, mapActions} from 'vuex';
   import router from '../../router';
 
-  const url = 'http://localhost:8070';
+  const url = 'http://localhost:80';
   const userId = 1;
   export default {
     inject: ['reload'],
@@ -66,10 +67,29 @@
     },
     created() {
       console.dir('aaa');
-      axios.get(url + '/ship/area/' + userId).then(result => {
+      /* axios.get(url + '/ship/area/' + userId).then(result => {
+         console.dir(result.data);
+         if(result.data != null){
+           this.datas = result.data;
+           console.dir(this.datas);
+           this.totalNum = this.datas.length;
+         }else {
+           this.datas = null;
+           this.totalNum = 0;
+         }
+
+       });*/
+      get('/ship/area/' + userId).then(result => {
         console.dir(result.data);
-        this.datas = result.data.data;
-        this.totalNum = this.datas.length;
+        if (result.data != null) {
+          this.datas = result.data;
+          console.dir(this.datas);
+          this.totalNum = this.datas.length;
+        } else {
+          this.datas = null;
+          this.totalNum = 0;
+        }
+
       });
     },
     computed: {},
@@ -92,7 +112,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.get(url + '/ship/area/del/' + row.id).then(res => {
+          get('/ship/area/del/' + row.id).then(res => {
             if (res.data.code === '200') {
               this.reload();
               console.dir('success');

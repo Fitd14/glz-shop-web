@@ -194,7 +194,7 @@
           if (item.id === data) {
             father.temp.id = item.id;
             father.temp.name = item.name;
-            father.temp.address = item.province;
+            father.temp.address = item.province + item.city + item.area+item.region;
             console.dir('----------');
             console.dir(father.temp.id)
           }

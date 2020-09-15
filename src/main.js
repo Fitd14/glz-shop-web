@@ -9,19 +9,20 @@ import VueResource from 'vue-resource';
 import ElementUI from 'element-ui';
 import moment from 'vue-moment';
 import VDistpicker from 'v-distpicker';
-
+import 'element-ui/lib/theme-chalk/index.css';
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(ElementUI);
 Vue.use(ViewUi);
 Vue.use(VueResource);
 Vue.use(require('vue-moment'));
+Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 Vue.prototype.moment = moment;
-Vue.filter('dateFormat', function(dateStr, pattern = 'YYYY-MM-DD') {
+Vue.filter('dateFormat', function (dateStr, pattern = 'YYYY-MM-DD') {
   return moment(dateStr).format(pattern);
 });
-Vue.filter('moneyFormat', function(money, pattern = '¥') {
+Vue.filter('moneyFormat', function (money, pattern = '¥') {
   return moment(money).format(pattern + money);
 });
 /* eslint-disable no-new */

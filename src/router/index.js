@@ -24,6 +24,13 @@ const MyShoppingCart = resolve => require(['@/components/home/MyShoppingCart'], 
 const Merchant = resolve => require(['@/components/Merchant'], resolve);
 
 Vue.use(Router);
+/*
+const originalPush = VueRouter.prototype.push
+// 重写了原型上的push方法，统一的处理了错误信息
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+*/
 
 if (sessionStorage.getItem('token')) {
   store.commit('set_token', sessionStorage.getItem('token'));
@@ -142,7 +149,10 @@ const router = new Router({
         {
           path: 'myOrder',
           name: 'MyOrder',
-          component: MyOrder
+          component: MyOrder/*,
+          meta: {
+            keepAlive: true
+          }*/
         },
         {
           path: 'myShoppingCart',
