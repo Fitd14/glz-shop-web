@@ -10,12 +10,14 @@ import ElementUI from 'element-ui';
 import moment from 'vue-moment';
 import VDistpicker from 'v-distpicker';
 import 'element-ui/lib/theme-chalk/index.css';
+import store from './vuex/store';
+import stores from './common/store';
+
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(ElementUI);
 Vue.use(ViewUi);
 Vue.use(VueResource);
 Vue.use(require('vue-moment'));
-Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 Vue.prototype.moment = moment;
@@ -29,6 +31,7 @@ Vue.filter('moneyFormat', function (money, pattern = '¥') {
 new Vue({
   el: '#app',
   router,
+  store: stores,
   components: {App},
   template: '<App/>'
 });

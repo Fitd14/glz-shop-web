@@ -24,13 +24,6 @@ const MyShoppingCart = resolve => require(['@/components/home/MyShoppingCart'], 
 const Merchant = resolve => require(['@/components/Merchant'], resolve);
 
 Vue.use(Router);
-/*
-const originalPush = VueRouter.prototype.push
-// 重写了原型上的push方法，统一的处理了错误信息
-VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
-*/
 
 if (sessionStorage.getItem('token')) {
   store.commit('set_token', sessionStorage.getItem('token'));
@@ -93,21 +86,25 @@ const router = new Router({
     {
       path: '/order', // 订单页面
       name: 'Order',
+      meta: {requireAuth: true},
       component: Order
     },
     {
       path: '/pay', // 支付页面
       name: 'Pay',
+      meta: {requireAuth: true},
       component: Pay
     },
     {
       path: '/payDone', // 支付成功页面
       name: 'PayDone',
+      meta: {requireAuth: true},
       component: PayDone
     },
     {
       path: '/freeback', // 反馈页面
       name: 'Freeback',
+      meta: {requireAuth: true},
       component: Freeback
     },
     {
@@ -134,29 +131,35 @@ const router = new Router({
         {
           path: 'orderItem/:orderNo',
           name: 'OrderItem',
+          meta: {requireAuth: true},
           component: OrderItem
         },
         {
           path: 'addAddress',
           name: 'AddAddress',
+          meta: {requireAuth: true},
           component: AddAddress
         },
         {
           path: 'addAddress/:id',
           name: 'AddAddress',
+          meta: {requireAuth: true},
           component: AddAddress
         },
         {
           path: 'myOrder',
           name: 'MyOrder',
-          component: MyOrder/*,
+          component: MyOrder,
+          /*,
           meta: {
             keepAlive: true
           }*/
+          meta: {requireAuth: true},
         },
         {
           path: 'myShoppingCart',
           name: 'MyShoppingCart',
+          meta: {requireAuth: true},
           component: MyShoppingCart
         }
       ]

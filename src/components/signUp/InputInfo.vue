@@ -65,19 +65,23 @@ export default {
       const father = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('注册成功');
-          const userinfo = {
+          const member = {
             username: this.formValidate.name,
             password: this.formValidate.password,
-            mail: this.formValidate.mail,
+            email: this.formValidate.mail,
             phone: this.$route.query.phone
           };
-          this.addSignUpUser(userinfo);
-          father.SET_SIGN_UP_SETP(2);
+          this.addSignUpUser(member).then(resp => {
+            if (resp.code === '200') {
+              this.$Message.success('注册成功');
+              father.SET_SIGN_UP_SETP(2);
+            } else {
+              this.$Message.error(resp.message);
+            }
+          });
           this.$router.push({ path: '/SignUp/signUpDone' });
-        } else {
-          this.$Message.error('注册失败');
         }
+        this.$Message.error('注册失败');
       });
     }
   },

@@ -66,14 +66,14 @@
         orderBack: {
           orderNo: '',
           commodityId: '',
-          memo: '',
+          memo: ''
         },
         orderNo: '',
         datas: [],
         multipleTable: [],
-        currentPage: 1,//默认显示第一页
-        pageSize: 5,//默认每页显示10条
-        totalNum: 1000 //总页数
+        currentPage: 1, // 默认显示第一页
+        pageSize: 5, // 默认每页显示10条
+        totalNum: 1000 // 总页数
       };
     },
     created() {
@@ -90,7 +90,7 @@
     methods: {
       changeStatus(val) {
         if (val === 0) {
-          return '未发货'
+          return '未发货';
         } else if (val === 1) {
           return '已发货';
         } else if (val === 2) {
@@ -106,7 +106,7 @@
           this.$message({
             type: 'success',
             message: '此订单已退货或正在申请退货'
-          })
+          });
         } else {
           this.$prompt('请输入原因', '提示', {
             confirmButtonText: '确定',
@@ -119,17 +119,17 @@
               message: value
             });
             this.orderBack.orderNo = data.orderNo;
-            this.orderBack.commodityId = data.commodityId
+            this.orderBack.commodityId = data.commodityId;
             this.orderBack.memo = value;
             console.dir(this.orderBack);
             axios.post(url + '/orderBack/insert', this.orderBack).then(res => {
-              console.dir(res.data)
+              console.dir(res.data);
             });
             data.status = 2;
-            console.dir('************')
-            console.dir(data)
+            console.dir('************');
+            console.dir(data);
             axios.post(url + '/orderItem/udp', data).then(res => {
-              console.dir(res.data)
+              console.dir(res.data);
             });
           }).catch(() => {
             this.$message({
@@ -145,12 +145,12 @@
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-        this.pageSize = val;    //动态改变
+        this.pageSize = val; // 动态改变
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        this.currentPage = val;    //动态改变
-      },
+        this.currentPage = val; // 动态改变
+      }
     },
     store
   };

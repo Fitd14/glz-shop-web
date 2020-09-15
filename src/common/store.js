@@ -1,15 +1,18 @@
-import Vuex from 'vuex';
 import Vue from 'vue';
+import vuex from 'vuex';
 
-Vue.use(Vuex);
+Vue.use(vuex);
 
-export default new Vuex.Store({
+const stores = new vuex.Store({
   state: {
     token: '',
-    refToken: ''
+    refToken: '',
+    userInfo: {
+      username: ''
+    }
   },
   mutations: {
-    set_token (state, token, refToken) {
+    set_token  (state, token, refToken) {
       state.token = token;
       state.refToken = refToken;
       sessionStorage.token = token;
@@ -17,9 +20,8 @@ export default new Vuex.Store({
     del_token (state) {
       state.token = '';
       sessionStorage.removeItem('token');
-    },
-    set_userInfo(state, username) {
-      state.userInfo.username = username;
     }
   }
 });
+
+export default stores;

@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import {get, post} from '../service/http.service';
-import store from '../common/store';
-
+import store from './store';
+import stores from '../common/store';
 Vue.use(VueResource);
 
 // 获取秒杀数据
@@ -700,15 +700,16 @@ export const loadAddress = ({commit}) => {
 
 export const loadShoppingCart = ({commit}) => {
   return new Promise((resolve, reject) => {
-    const data = [{
-      goods_id: 1529931938150,
-      count: 1,
-      img: 'static/img/goodsDetail/pack/1.jpg',
-      package: '4.7英寸-深邃蓝',
-      price: 28,
-      title: '苹果8/7手机壳iPhone7 Plus保护壳全包防摔磨砂硬外壳'
-    }];
-    commit('SET_SHOPPING_CART', data);
+    // const data = [{
+    //   goods_id: 1529931938150,
+    //   count: 1,
+    //   img: 'static/img/goodsDetail/pack/1.jpg',
+    //   package: '4.7英寸-深邃蓝',
+    //   price: 28,
+    //   title: '苹果8/7手机壳iPhone7 Plus保护壳全包防摔磨砂硬外壳'
+    // }];
+    // commit('SET_SHOPPING_CART', data);
+
   });
 };
 
@@ -716,7 +717,7 @@ export const loadShoppingCart = ({commit}) => {
 export const addSignUpUser = ({commit}, data) => {
   return new Promise((resolve, reject) => {
     post('/user/member/save', data).then(resp => {
-
+      resolve(resp);
     });
   });
 };
@@ -726,7 +727,7 @@ export const login = ({commit}, data) => {
   return new Promise((resolve, reject) => {
     post('/auth', data).then(resp => {
       if (resp.code === '200') {
-        store.commit('set_token', resp.data.token);
+        stores.commit('set_token', resp.data.token);
         localStorage.setItem('loginInfo', resp.data.username);
         resolve(resp.data.username);
       } else {
@@ -740,6 +741,7 @@ export const login = ({commit}, data) => {
 export const signOut = ({commit}) => {
   localStorage.removeItem('loginInfo');
   commit('SET_USER_LOGIN_INFO', {});
+  post('/logout');
 };
 
 // 判断是否登陆
@@ -747,13 +749,39 @@ export const isLogin = ({commit}) => {
   const user = localStorage.getItem('loginInfo');
   if (user !== null) {
     // commit('SET_USER_LOGIN_INFO', JSON.parse(user));
-    getUserInfo('1');
+    return getLoginInfo();
   }
 };
 
+// 获取用户信息
 export const getUserInfo = ({commit}) => {
   return new Promise((resolve, reject) => {
     get('/user/member/getInfo').then(resp => {
+      resolve(resp);
+    });
+  });
+};
+
+// 获取登陆用户信息
+export const getLoginInfo = (state) => {
+  // let username = stores.state.userInfo.username;
+  let loginInfo = localStorage.getItem('loginInfo');
+  return loginInfo;
+};
+
+// 是否需要验证码
+export const getIsCaptcha = ({commit}, data) => {
+  return new Promise((resolve, reject) => {
+    get('/auth/isUseCaptcha?username=' + data.username).then(resp => {
+      resolve(resp.data);
+    });
+  });
+};
+
+// 获取验证码
+export const getCaptcha = ({commit}) => {
+  return new Promise((resolve, reject) => {
+    get('/auth/captcha').then(resp => {
       resolve(resp);
     });
   });

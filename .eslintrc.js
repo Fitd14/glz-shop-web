@@ -25,7 +25,8 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // 'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': 'off',
     "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }],
     "no-unused-vars": 'off',
     "space-before-function-paren":"off",//取消函数前的空格
