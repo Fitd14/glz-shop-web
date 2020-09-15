@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import {get, post} from '../service/http.service';
-import store from '../common/store';
-
+import store from './store';
+import stores from '../common/store';
 Vue.use(VueResource);
 
 // 获取秒杀数据
@@ -726,7 +726,7 @@ export const login = ({commit}, data) => {
   return new Promise((resolve, reject) => {
     post('/auth', data).then(resp => {
       if (resp.code === '200') {
-        store.commit('set_token', resp.data.token);
+        stores.commit('set_token', resp.data.token);
         localStorage.setItem('loginInfo', resp.data.username);
         resolve(resp.data.username);
       } else {
@@ -747,13 +747,39 @@ export const isLogin = ({commit}) => {
   const user = localStorage.getItem('loginInfo');
   if (user !== null) {
     // commit('SET_USER_LOGIN_INFO', JSON.parse(user));
-    getUserInfo('1');
+    return getLoginInfo();
   }
 };
 
+// 获取用户信息
 export const getUserInfo = ({commit}) => {
   return new Promise((resolve, reject) => {
     get('/user/member/getInfo').then(resp => {
+      resolve(resp);
+    });
+  });
+};
+
+// 获取登陆用户信息
+export const getLoginInfo = (state) => {
+  // let username = stores.state.userInfo.username;
+  let loginInfo = localStorage.getItem('loginInfo');
+  return loginInfo;
+};
+
+// 是否需要验证码
+export const getIsCaptcha = ({commit}, data) => {
+  return new Promise((resolve, reject) => {
+    get('/auth/isUseCaptcha?username=' + data.username).then(resp => {
+      resolve(resp.data);
+    });
+  });
+};
+
+// 获取验证码
+export const getCaptcha = ({commit}) => {
+  return new Promise((resolve, reject) => {
+    get('/auth/captcha').then(resp => {
       resolve(resp);
     });
   });

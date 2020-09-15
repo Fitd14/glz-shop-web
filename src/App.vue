@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header v-if="isRouterAlive"></Header>
     <router-view v-if="isRouterAlive"></router-view>
     <!--
       <keep-alive>
@@ -35,14 +35,14 @@
     provide() {
       return {
         reload: this.reload
-      }
+      };
     },
     methods: {
       reload() {
         this.isRouterAlive = false;
         this.$nextTick(function () {
           this.isRouterAlive = true;
-        })
+        });
       }
     }
   };

@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Index from '@/components/Index';
-import store from '../common/store';
+import store from '../vuex/store';
+import stores from '../common/store';
 
 const Login = resolve => require(['@/components/Login'], resolve);
 const SignUp = resolve => require(['@/components/SignUp'], resolve);
@@ -26,7 +27,7 @@ const Merchant = resolve => require(['@/components/Merchant'], resolve);
 Vue.use(Router);
 
 if (sessionStorage.getItem('token')) {
-  store.commit('set_token', sessionStorage.getItem('token'));
+  stores.commit('set_token', sessionStorage.getItem('token'));
 }
 
 const router = new Router({

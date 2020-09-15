@@ -104,7 +104,7 @@
     name: 'MyOrder',
     data() {
       return {
-        tableDataName: "",
+        tableDataName: '',
         tableDataEnd: [],
         filterTableDataEnd: [],
         flag: false,
@@ -112,9 +112,9 @@
         revive: null,
         datas: [],
         multipleTable: [],
-        currentPage: 1,//默认显示第一页
-        pageSize: 5,//默认每页显示10条
-        totalNum: 1000 //总页数
+        currentPage: 1, // 默认显示第一页
+        pageSize: 5, // 默认每页显示10条
+        totalNum: 1000 // 总页数
         /* // 初始化信息总条数
          dataCount: 0,
          // 每页显示多少条
@@ -218,16 +218,15 @@
              align: 'center',
              fixed: 'right'
            }
-         ]*/
+         ] */
       };
     },
     created() {
       /* axios.get(url + '/order/1').then(res => {
          this.order = res.data.data.data;
          this.tempPage();
-       });*/
+       }); */
       this.begin();
-
     },
     computed: {},
     methods: {
@@ -249,39 +248,39 @@
           }
         }
       },
-      //前端搜索功能需要区分是否检索,因为对应的字段的索引不同
-      //用两个变量接收currentChangePage函数的参数
+      // 前端搜索功能需要区分是否检索,因为对应的字段的索引不同
+      // 用两个变量接收currentChangePage函数的参数
       doFilter() {
-        if (this.tableDataName == "") {
-          this.$message.warning("查询条件不能为空！");
+        if (this.tableDataName === '') {
+          this.$message.warning('查询条件不能为空！');
           this.begin();
           return;
         }
-        this.tableDataEnd = []
-        //每次手动将数据置空,因为会出现多次点击搜索情况
-        this.filterTableDataEnd = []
+        this.tableDataEnd = [];
+        // 每次手动将数据置空,因为会出现多次点击搜索情况
+        this.filterTableDataEnd = [];
         this.datas.forEach((value, index) => {
           if (value.orderNo) {
             if (value.orderNo.indexOf(this.tableDataName) >= 0) {
-              this.filterTableDataEnd.push(value)
+              this.filterTableDataEnd.push(value);
             }
           }
         });
-        //页面数据改变重新统计数据数量和当前页
-        this.currentPage = 1
-        this.totalItems = this.filterTableDataEnd.length
-        //渲染表格,根据值
-        this.currentChangePage(this.filterTableDataEnd)
-        //页面初始化数据需要判断是否检索过
-        this.flag = true
+        // 页面数据改变重新统计数据数量和当前页
+        this.currentPage = 1;
+        this.totalItems = this.filterTableDataEnd.length;
+        // 渲染表格,根据值
+        this.currentChangePage(this.filterTableDataEnd);
+        // 页面初始化数据需要判断是否检索过
+        this.flag = true;
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-        this.pageSize = val;    //动态改变
+        this.pageSize = val; // 动态改变
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        this.currentPage = val;    //动态改变
+        this.currentPage = val; // 动态改变
       },
       unpay(userId, payStatus) {
         axios.get(url + '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
@@ -299,9 +298,8 @@
       },
 
       getData(row) {
-        this.$router.push({name: 'OrderItem', query: {orderNo: row.orderNo}})
+        this.$router.push({name: 'OrderItem', query: {orderNo: row.orderNo}});
       },
-
 
       delOrder(row) {
         console.log(row.orderNo);

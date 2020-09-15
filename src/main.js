@@ -3,16 +3,18 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import ViewUi from 'view-design';
+import iViewUi from 'view-design';
 import 'iview/dist/styles/iview.css';
 import VueResource from 'vue-resource';
 import ElementUI from 'element-ui';
 import moment from 'vue-moment';
 import VDistpicker from 'v-distpicker';
+import store from './vuex/store';
+import stores from './common/store';
 
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(ElementUI);
-Vue.use(ViewUi);
+Vue.use(iViewUi);
 Vue.use(VueResource);
 Vue.use(require('vue-moment'));
 
@@ -28,6 +30,7 @@ Vue.filter('moneyFormat', function(money, pattern = '¥') {
 new Vue({
   el: '#app',
   router,
+  store: stores,
   components: {App},
   template: '<App/>'
 });

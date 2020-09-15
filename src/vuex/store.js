@@ -3,12 +3,10 @@ import Vuex from 'vuex';
 import * as actions from './actions';
 import * as mutations from './mutations';
 import * as getters from './getters';
-import VueResource from 'vue-resource';
 
 Vue.use(Vuex);
-Vue.use(VueResource);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     isLoading: false, // 是否展示loading动画
     orderBy: 'sale', // 根据什么字段排序
@@ -53,3 +51,5 @@ export default new Vuex.Store({
   actions,
   mutations
 });
+
+export default store;
