@@ -45,18 +45,19 @@
   </div>
 </template>
 <script>
-  import axios from 'axios';
   import store from '@/vuex/store';
+  import {get} from "../../service/http.service";
+  import {getUserInfo} from '../../vuex/actions';
   import {mapState, mapActions} from 'vuex';
-  import router from '../../router';
 
-  const url = 'http://localhost:8070';
-  const userId = 1;
+  const url = 'http://localhost:80';
   export default {
     inject: ['reload'],
     name: 'MyShoppingCart',
     data() {
       return {
+        userId: '',
+        user: null,
         datas: [],
         multipleTable: [],
         currentPage: 1,//默认显示第一页
@@ -65,11 +66,23 @@
       };
     },
     created() {
-      console.dir('aaa');
-      axios.get(url + '/ship/area/' + userId).then(result => {
-        console.dir(result.data);
-        this.datas = result.data.data;
-        this.totalNum = this.datas.length;
+      getUserInfo().then(res => {
+        this.user = res.data;
+        console.dir(this.user.userId);
+        this.userId = this.user.userId;
+        get('/ship/area/' + this.userId).then(result => {
+          console.dir('--------------------------')
+          console.dir(this.userId);
+          console.dir(result.data);
+          if (result.data != null) {
+            this.datas = result.data;
+            console.dir(this.datas);
+            this.totalNum = this.datas.length;
+          } else {
+            this.datas = null;
+            this.totalNum = 0;
+          }
+        });
       });
     },
     computed: {},
@@ -92,7 +105,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.get(url + '/ship/area/del/' + row.id).then(res => {
+          get('/ship/area/del/' + row.id).then(res => {
             if (res.data.code === '200') {
               this.reload();
               console.dir('success');

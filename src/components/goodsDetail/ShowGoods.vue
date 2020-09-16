@@ -3,7 +3,8 @@
     <div class="item-detail-show">
       <div class="item-detail-left">
         <div class="item-detail-big-img">
-          <img :src="goodsInfo.goodsImg[imgIndex]" alt="">
+          <!--  <img :src="goodsInfo.goodsImg[imgIndex]" alt="">-->
+          <img :src="commondity.photo" alt="">
         </div>
         <div class="item-detail-img-row">
           <div class="item-detail-img-small" v-for="(item, index) in goodsInfo.goodsImg" :key="index"
@@ -15,8 +16,8 @@
       <div class="item-detail-right">
         <div class="item-detail-title">
           <p>
-           <!-- <span class="item-detail-express">校园配送</span> {{goodsInfo.title}}</p>-->
-            <span class="item-detail-express">校园配送</span> {{goods.commodityName}}</p>
+            <!-- <span class="item-detail-express">校园配送</span> {{goodsInfo.title}}</p>-->
+            <span class="item-detail-express">校园配送</span> {{commondity.commoditySubHead}}</p>
         </div>
         <div class="item-detail-tag">
           <p>
@@ -28,7 +29,7 @@
             <div class="item-price-row">
               <p>
                 <span class="item-price-title">B I T 价</span>
-                <span class="item-price">￥{{goods.price}}</span>
+                <span class="item-price">￥{{commondity.price}}</span>
               </p>
             </div>
             <div class="item-price-row">
@@ -73,25 +74,37 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- 白条分期 -->
-        <div class="item-select">
-          <div class="item-select-title">
-            <p>白条分期</p>
-          </div>
-          <div class="item-select-row">
-            <div class="item-select-class" v-for="(item,index) in hirePurchase" :key="index">
-              <Tooltip :content="item.tooltip" placement="top-start">
-                <span>{{item.type}}</span>
-              </Tooltip>
+          <!-- <div>
+             <el-radio v-model="radio1" :key="item" v-for="item in colorBox" label="1" border>备选项1</el-radio>
+           </div>-->
+          <div class="item-select-column">
+            <div class="item-select-row" v-for="item in colorBox" :key="index">
+              <div class="item-select-box">
+                <div class="item-select-intro">
+                  <p>{{item}}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <!-- 白条分期 -->
+        <!--  <div class="item-select">
+            <div class="item-select-title">
+              <p>白条分期</p>
+            </div>
+            <div class="item-select-row">
+              <div class="item-select-class" v-for="(item,index) in hirePurchase" :key="index">
+                <Tooltip :content="item.tooltip" placement="top-start">
+                  <span>{{item.type}}</span>
+                </Tooltip>
+              </div>
+            </div>
+          </div>-->
         <br>
         <div class="add-buy-car-box">
           <div class="add-buy-car">
-            <InputNumber :min="1" v-model="count" size="large"></InputNumber>
-            <Button type="error" size="large" @click="addShoppingCartBtn()">加入购物车</Button>
+            <InputNumber :min="1" v-model="cartDemo.commodityCount" size="large"></InputNumber>
+            <Button type="error" size="large" @click="addShopCart()">加入购物车</Button>
           </div>
         </div>
       </div>
@@ -103,13 +116,23 @@
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import axios from "axios";
+  import {get, post} from "../../service/http.service";
+  import global_variable from "../../common/global_variable";
 
-  const url = 'http://localhost:9500';
+  const url = 'http://localhost:80';
   export default {
     name: 'ShowGoods',
     data() {
       return {
-        goods: null,
+        cartDemo: {
+          userId: '',
+          commodityId: '',
+          commodityCount: '',
+        },
+        radio1: '',
+        tempUrl: '',
+        colorBox: null,
+        commondity: null,
         price: 0,
         count: 1,
         selectBoxIndex: 0,
@@ -148,7 +171,13 @@
       }
     },
     created() {
-      this.getOneGoods('1303874819187662849');
+      global_variable.setCid('1303874819187662849');
+      get('/commodityAttribute/sel', {id: 50}).then(res => {
+        console.dir(res.data);
+        this.colorBox = res.data.inputList.split(",");
+        console.dir(this.colorBox)
+      });
+      this.getOneGoods(global_variable.cid);
     },
     methods: {
       ...mapActions(['addShoppingCart']),
@@ -158,6 +187,13 @@
       },
       showBigImg(index) {
         this.imgIndex = index;
+      },
+      addShopCart(cart) {
+        this.cartDemo.id = this.commondity.id;
+        console.dir(this.cartDemo);
+        post('url + /cart/add').then(res => {
+          console.dir(res.data);
+        })
       },
       addShoppingCartBtn() {
         const index1 = parseInt(this.selectBoxIndex / 3);
@@ -174,10 +210,13 @@
         this.$router.push('/shoppingCart');
       },
       getOneGoods(ids) {
-        console.dir(url + '/commodity/selectOne/' + ids)
-        axios.get(url + '/commodity/selectOne/' + ids).then(res => {
-          console.dir(res.data.data);
-          this.goods = res.data.data;
+        get('/commodity/selectOne/' + ids).then(res => {
+          this.commondity = res.data;
+          console.dir('-----------------')
+          console.dir(this.commondity);
+          this.tempUrl = 'http://192.168.115.58:4396//0aab0461d7b041e6aaa40608002f4548.jpg';
+          console.dir(this.tempUrl);
+          global_variable.setGoods(this.commondity);
         })
       }
     },
@@ -214,6 +253,7 @@
   }
 
   .item-detail-big-img img {
+    height: 100%;
     width: 100%;
   }
 

@@ -10,9 +10,7 @@
       height="370"
       @selection-change="handleSelectionChange" empty-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
       <el-table-column type="selection" width="55"></el-table-column>
-       <el-table-column prop="cartId" label="商品" align="center">
-       </el-table-column>
-      <el-table-column prop="price" label="单价" align="center">
+      <el-table-column prop="price" label="单价">
         <template slot-scope="scope">
           {{scope.row.price| moneyFormat}}
         </template>
@@ -23,15 +21,15 @@
           @change="handleChangeLevels(scope.row)"></el-input-number>
          </template>
       </el-table-column>
-      <el-table-column prop="totalPrice" label="总价" align="center">
+      <el-table-column prop="totalPrice" label="总价">
         <template slot-scope="scope">
           {{scope.row.totalPrice| moneyFormat}}
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="日期" sortable align="center">
+      <el-table-column prop="createTime" label="日期" sortable>
         <template slot-scope="scope">{{scope.row.createTime| dateFormat}}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -54,11 +52,15 @@
     mapActions
   } from 'vuex';
   import axios from 'axios';
+<<<<<<< HEAD
   import qs from 'qs'
   import http from '../../service/http.service';
   const url = 'http://localhost:80';
   const url2 = 'http://localhost:9500';
   var name = '';
+=======
+  const url = 'http://localhost:7000';
+>>>>>>> 6898dcc618eefedba94f355f61f09aaa93d09a7f
   export default {
     inject: ['reload'],
     name: 'MyShoppingCart',
@@ -68,31 +70,22 @@
         multipleSelection: [],
         currentPage: 1, //初始页
         pagesize: 5, //每页的数据
-        num: 1,
-        ids: []
+        num: 1
       };
     },
     created() {
+<<<<<<< HEAD
       this.$http.get('http://localhost:80/cart/list/1').then(res => {
         console.dir(res.data.data);
+=======
+      axios.get(url + '/cart/list/1').then(res => {
+>>>>>>> 6898dcc618eefedba94f355f61f09aaa93d09a7f
         this.datas = res.data.data;
-        for(let i=0; i < this.datas.length; i++){
-          axios.get(url2+'/commodity/selectOne/'+this.datas[i].commodityId).then(res => {
-            this.datas[i].cartId = res.data.data.commoditySubHead;
-          });
-        }
       });
     },
     methods: {
       goTo() {
-        for (var i = 0; i < this.multipleSelection.length; i++) {
-          this.ids.push(this.multipleSelection[i].commodityId);
-        }
-        if(this.ids.length <= 0){
-          alert('请选择想要购买的商品！');
-        }else{
-          this.$router.push('/order/'+this.ids);
-        }
+        this.$router.push('/order');
       },
       toggleSelection(rows) {
         if (rows) {
@@ -107,24 +100,16 @@
         this.multipleSelection = val;
       },
       batchDelete() {
-
+        var ids = [];
         for (var i = 0; i < this.multipleSelection.length; i++) {
-          this.ids.push(this.multipleSelection[i].commodityId);
+          ids.push(this.multipleSelection[i].commodityId);
         }
         this.$confirm('您确认要删除选中吗？', '删除', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.delete(url + '/cart/delete/batch',{
-            params: {
-              userId: 1,
-              commodityIds: [this.ids]
-            },
-             paramsSerializer: function(params) {
-                    return qs.stringify(params, {arrayFormat: 'repeat'})
-                }
-          });
+          axios.delete(url + '/cart/delete/batch?userId=1&commodityIds=' + ids);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -143,11 +128,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.delete(url + '/cart/deleteAll',{
-            params: {
-              userId: 1
-            }
-          });
+          axios.delete(url + '/cart/deleteAll?userId=1');
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -166,12 +147,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.delete(url + '/cart/delete',{
-            params: {
-              userId: 1,
-              commodityId: row.commodityId
-            }
-          });
+          axios.delete(url + '/cart/delete?userId=1&commodityId=' + row.commodityId);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -191,6 +167,7 @@
         this.currentPage = currentPage;//点击第几页
       },
       handleChangeLevels (row) {
+        console.dir('a');
         axios.put(url + '/cart/update/count?userId=1&commodityId=' + row.commodityId + '&commodityCount='+row.commodityCount);
       },
     },

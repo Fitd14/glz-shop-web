@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Index from '@/components/Index';
-import store from '../vuex/store';
-import stores from '../common/store';
-
+import store from '../common/store';
+import stores from "../common/store";
 const Login = resolve => require(['@/components/Login'], resolve);
 const SignUp = resolve => require(['@/components/SignUp'], resolve);
 const CheckPhone = resolve => require(['@/components/signUp/CheckPhone'], resolve);
@@ -18,6 +17,7 @@ const PayDone = resolve => require(['@/components/PayDone'], resolve);
 const Freeback = resolve => require(['@/components/Freeback'], resolve);
 const Home = resolve => require(['@/components/Home'], resolve);
 const MyAddress = resolve => require(['@/components/home/MyAddress'], resolve);
+const MyUserInfo = resolve => require(['@/components/home/MyUserInfo'], resolve);
 const OrderItem = resolve => require(['@/components/home/OrderItem'], resolve);
 const AddAddress = resolve => require(['@/components/home/AddAddress'], resolve);
 const MyOrder = resolve => require(['@/components/home/MyOrder'], resolve);
@@ -27,7 +27,7 @@ const Merchant = resolve => require(['@/components/Merchant'], resolve);
 Vue.use(Router);
 
 if (sessionStorage.getItem('token')) {
-  stores.commit('set_token', sessionStorage.getItem('token'));
+  store.commit('set_token', sessionStorage.getItem('token'));
 }
 
 const router = new Router({
@@ -70,7 +70,7 @@ const router = new Router({
       ]
     },
     {
-      path: '/goodsList/:id', // 商品列表
+      path: '/goodsList', // 商品列表
       name: 'GoodsList',
       component: GoodsList
     },
@@ -85,7 +85,7 @@ const router = new Router({
       component: ShoppingCart
     },
     {
-      path: '/order/:ids', // 订单页面
+      path: '/order', // 订单页面
       name: 'Order',
       meta: {requireAuth: true},
       component: Order
@@ -150,14 +150,24 @@ const router = new Router({
         {
           path: 'myOrder',
           name: 'MyOrder',
+          component: MyOrder,
+          /*,
+          meta: {
+            keepAlive: true
+          }*/
           meta: {requireAuth: true},
-          component: MyOrder
         },
         {
           path: 'myShoppingCart',
           name: 'MyShoppingCart',
           meta: {requireAuth: true},
           component: MyShoppingCart
+        },
+        {
+          path: 'myUserInfo',
+          name: 'MyUserInfo',
+          meta: {requireAuth: true},
+          component: MyUserInfo
         }
       ]
     },

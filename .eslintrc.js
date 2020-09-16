@@ -1,10 +1,5 @@
 // https://eslint.org/docs/user-guide/configuring
-{
-  "presets": [
-  ["es2015", { "modules": false }]
-  ],
-  "plugins": ["transform-object-rest-spread"]
-}
+
 module.exports = {
   root: true,
   parserOptions: {

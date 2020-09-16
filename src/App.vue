@@ -3,6 +3,7 @@
     <Header v-if="isRouterAlive"></Header>
     <router-view v-if="isRouterAlive"></router-view>
     <!--
+    // 頁面缓存不刷新
       <keep-alive>
       <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>

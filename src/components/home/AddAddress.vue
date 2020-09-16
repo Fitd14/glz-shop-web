@@ -42,18 +42,21 @@
   import Distpicker from 'v-distpicker';
   import {mapActions} from 'vuex';
   import {addShipAddress, loadAddress} from '../../vuex/actions';
-  import axios from 'axios';
+  import {getUserInfo} from '../../vuex/actions';
   import router from '../../router';
+  import {get, post} from '../../service/http.service'
 
-  const url = 'http://localhost:8070';
+  const url = 'http://localhost:80';
   export default {
     name: 'AddAddress',
     data() {
       return {
         id: 0,
+        user: null,
+        userId: '',
         formData: {
           id: '',
-          userId: '1',
+          userId: '',
           name: '',
           postCode: '',
           detailAddress: '',
@@ -84,25 +87,37 @@
       this.id = this.$route.query.id;
       console.dir(this.id);
       if (this.id != null) {
-        axios.get(url + '/ship/area/id/' + this.id).then(res => {
-          if (res.data.data != null) {
-            this.formData = res.data.data;
+        get('/ship/area/id/' + this.id).then(res => {
+          console.dir(res);
+          if (res.data != null) {
+            this.formData = res.data;
             console.dir(this.formData);
           } else {
             console.dir('aaa');
           }
         });
-      }
+      };
+      getUserInfo().then(res => {
+        this.user = res.data;
+        console.dir(this.user)
+        this.userId = this.user.userId;
+        console.dir(this.userId)
+      });
     },
     methods: {
       ...mapActions(['loadAddress', 'addShipAddress', 'UserLogin']),
+
       aaa(data) {
+        console.dir('--------------------')
+        data.userId = this.userId;
         console.dir(data);
+        console.dir('----------------')
         if (data.area !== '' && data.city !== '' && data.region !== ''
           && data.name !== '' && data.postCode !== '') {
           let i = data.id;
-          axios.post(url + '/ship/add', data).then(res => {
-            console.dir(res.data);
+          console.dir(data);
+          console.dir(this.userId);
+          post('/ship/add', data).then(res => {
             if (i !== '') {
               this.$message({
                 message: '恭喜你，更新成功',
@@ -127,8 +142,9 @@
         console.dir('aaa');
         console.dir(this.formData);
         console.dir(dat);
-        this.$http.post('http://localhost:8070/ship/add', dat).then(function (reponse) {
-        });
+        post('/ship/add', dat).then(res => {
+          console.dir(res.data)
+        })
       },
       getProvince(data) {
         this.formData.province = data.value;
