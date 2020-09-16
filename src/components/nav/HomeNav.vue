@@ -83,9 +83,9 @@
         <!-- 幻灯片 -->
         <div>
           <Carousel autoplay loop>
-              <CarouselItem  v-for="(item, index) in marketing.CarouselItems" :key="index">
+              <CarouselItem  v-for="(item, index) in lunbo" :key="index">
                 <router-link to="/goodsList">
-                  <img :src="item">
+                  <img :src="item" height="340" width="760">
                 </router-link>
               </CarouselItem>
           </Carousel>
@@ -143,6 +143,7 @@ export default {
   name: 'HomeNav',
   data () {
     return {
+      lunbo: [],
       panel1: false,
       panel2: false,
       nav: [
@@ -256,8 +257,14 @@ export default {
       }
     };
   },
+
   computed: {
     ...mapState(['marketing'])
+  },
+  created() {
+    this.$http.get('http://localhost/shop/adver/getShowList').then(res => {
+      this.lunbo = res.data.data;
+    });
   },
   methods: {
     showDetail (index) {
