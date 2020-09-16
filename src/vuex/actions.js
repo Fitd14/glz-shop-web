@@ -754,7 +754,7 @@ export const isLogin = ({commit}) => {
 };
 
 // 获取用户信息
-export const getUserInfo = ({commit}) => {
+export const getUserInfo = () => {
   return new Promise((resolve, reject) => {
     get('/user/member/getInfo').then(resp => {
       resolve(resp);

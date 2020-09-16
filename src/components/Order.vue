@@ -69,12 +69,12 @@
 </template>
 
 <script>
-  import axios from 'axios';
   import Search from '@/components/Search';
   import GoodsListNav from '@/components/nav/GoodsListNav';
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import {get} from "../service/http.service";
+  import {getUserInfo} from "../vuex/actions";
 
   const url = 'http://localhost:8070';
   export default {
@@ -85,10 +85,18 @@
     },
     created() {
       this.loadAddress();
-      this.getShipAddress(1);
+      getUserInfo().then(res => {
+        this.user = res.data;
+        console.dir(this.user)
+        this.userId = this.user.userId;
+        this.getShipAddress(this.userId);
+      });
+
     },
     data() {
       return {
+        userId: '',
+        user: null,
         disabledSingle: true,
         disabledGroup: [{name: '爪哇犀牛1'}, {name: '爪哇犀牛2'}, {name: '爪哇犀牛3'}],
         temp: {

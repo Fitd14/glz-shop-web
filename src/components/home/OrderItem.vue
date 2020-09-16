@@ -58,7 +58,6 @@
   import {get, post} from "../../service/http.service";
 
   const url = 'http://localhost:80';
-  const userId = 1;
   export default {
     inject: ['reload'],
     name: 'OrderItem',

@@ -49,7 +49,7 @@
                 stripe style="width: 100%;" height='550px' ref="multipleTable">
         <el-table-column prop="orderNo" label="订单编号">
         </el-table-column>
-        <el-table-column prop="userId" label="用户ID">
+        <el-table-column v-if="false" prop="userId" label="用户ID">
         </el-table-column>
         <el-table-column prop="payment" label="总价"></el-table-column>
         <el-table-column prop="status" label="发货状态">
@@ -100,6 +100,7 @@
 <script>
   import axios from 'axios';
   import {get} from '../../service/http.service';
+  import {getUserInfo} from '../../vuex/actions';
   import store from '@/vuex/store';
 
   const url = 'http://localhost:80';
@@ -108,6 +109,8 @@
     name: 'MyOrder',
     data() {
       return {
+        user: null,
+        userId: '',
         tableDataName: "",
         tableDataEnd: [],
         filterTableDataEnd: [],
@@ -230,16 +233,17 @@
          this.order = res.data.data.data;
          this.tempPage();
        });*/
+
       this.begin();
 
     },
     computed: {},
     methods: {
-      setPaymentStatus(paymentStatus){
-        if(paymentStatus === 1){
+      setPaymentStatus(paymentStatus) {
+        if (paymentStatus === 1) {
           return '已支付';
-        }else {
-        return '未支付';
+        } else {
+          return '未支付';
         }
       },
       changeStatus(val) {
@@ -256,12 +260,18 @@
         }
       },
       begin() {
-        get('/order/1').then(res => {
-          console.dir(res.data);
-          this.datas = res.data.data;
-          this.totalNum = this.datas.length;
-          this.tableDataEnd = this.datas;
+        getUserInfo().then(res => {
+          this.user = res.data;
+          console.dir(this.user)
+          this.userId = this.user.userId;
+          get('/order/' + this.userId).then(res => {
+            console.dir(res.data);
+            this.datas = res.data.data;
+            this.totalNum = this.datas.length;
+            this.tableDataEnd = this.datas;
+          });
         });
+
       },
       currentChangePage(list) {
         let from = (this.currentPage - 1) * this.pageSize;
