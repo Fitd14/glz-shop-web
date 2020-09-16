@@ -4,58 +4,21 @@
     <HomeNav></HomeNav>
     <!-- 商品显示区域 -->
     <div class="content">
-      <!-- 秒杀 -->
-      <div class="seckill">
-        <!-- 头部 -->
-        <div class="seckill-head">
-          <div class="seckill-icon">
-            <img src="static/img/index/clock.png">
-          </div>
-          <div class="seckill-text">
-            <span class="seckill-title">限时秒杀</span>
-            <span class="seckill-remarks">总有你想不到的低价</span>
-          </div>
-          <div class="count-down">
-            <span class="count-down-text">当前场次</span>
-            <span class="count-down-num count-down-hour">{{ seckillsHours }}</span>
-            <span class="count-down-point">:</span>
-            <span class="count-down-num count-down-minute">{{ seckillsMinutes }}</span>
-            <span class="count-down-point">:</span>
-            <span class="count-down-num count-down-seconds">{{ seckillsSeconds }}</span>
-            <span class="count-down-text">后结束抢购</span>
-          </div>
-        </div>
-        <!-- 内容 -->
-        <div class="seckill-content">
-          <div class="seckill-item" v-for="(item, index) in seckills.goodsList" :key="index">
-            <div class="seckill-item-img">
-              <router-link to="/goodsList"><img :src="item.img"></router-link>
-            </div>
-            <div class="seckill-item-info">
-              <p>{{item.intro}}</p>
-              <p>
-                <span class="seckill-price text-danger"><Icon type="social-yen"></Icon>{{item.price}}</span>
-                <span class="seckill-old-price"><s>{{item.realPrice}}</s></span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- 电脑专场 -->
       <div class="item-class">
         <div class="item-class-head">
-          <span class="item-class-title">{{computer.title}}</span>
+          <span class="item-class-title">{{this.classify1.name}}</span>
           <ul>
-            <li v-for="(item, index) in computer.link" :key="index">
-              <router-link to="/goodsList">{{item}}</router-link>
+            <li v-for="(item, index) in classify1Subclass" :key="index">
+              <router-link to="/goodsList">{{item.name}}</router-link>
             </li>
           </ul>
         </div>
-        <div class="item-class-content" v-for="(item, index) in computer.detail" :key="index">
+        <div class="item-class-content" v-for="(item, index) in classify1Info" :key="index">
           <div class="item-content-top">
             <div class="item-big-img">
               <router-link to="/goodsList">
-                <img :src="item.bigImg" alt="">
+                <img v-bind:src="item.photo" alt="" style="width: 180px; height: 260px;">
               </router-link>
             </div>
             <div class="item-four-img">
@@ -128,6 +91,7 @@ import Search from '@/components/Search';
 import HomeNav from '@/components/nav/HomeNav';
 import store from '@/vuex/store';
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
+import axios from 'axios';
 export default {
   name: 'Index',
   created () {
@@ -136,6 +100,15 @@ export default {
     this.loadComputer();
     this.loadEat();
     this.loadShoppingCart();
+    axios.get('http://localhost:9500/commodityCategory/selById?id=56').then(res => {
+      this.classify1 = res.data.data;
+    });
+    axios.get('http://localhost:9500/commodityCategory/subclass?parentId=56').then(res => {
+      this.classify1Subclass = res.data.data;
+    });
+    axios.get('http://localhost:9500/commodity/category?category=56').then(res => {
+      this.classify1Info = res.data.data;
+    });
   },
   mounted () {
     const father = this;
@@ -145,7 +118,10 @@ export default {
   },
   data () {
     return {
-      setIntervalObj: null
+      setIntervalObj: null,
+      classify1: [],
+      classify1Subclass: [],
+      classify1Info: []
     };
   },
   methods: {

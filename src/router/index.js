@@ -62,7 +62,7 @@ export default new Router({
       ]
     },
     {
-      path: '/goodsList', // 商品列表
+      path: '/goodsList/:id', // 商品列表
       name: 'GoodsList',
       component: GoodsList
     },
@@ -77,7 +77,7 @@ export default new Router({
       component: ShoppingCart
     },
     {
-      path: '/order', // 订单页面
+      path: '/order/:ids', // 订单页面
       name: 'Order',
       component: Order
     },

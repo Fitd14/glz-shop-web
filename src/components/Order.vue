@@ -3,12 +3,7 @@
     <Search></Search>
     <GoodsListNav></GoodsListNav>
     <div class="goods-list-container">
-      <Alert show-icon class="tips-box">
-        小提示
-        <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
-        <template slot="desc">请点击商品前的选择框，选择购物车中的商品，点击付款即可。</template>
-      </Alert>
-      <Table border ref="selection" :columns="columns" :data="shoppingCart" size="large" @on-selection-change="select" no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买"></Table>
+      <Table border ref="selection" :columns="columns" :data="this.datas" size="large" @on-selection-change="select" no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买"></Table>
       <div class="address-container">
         <h3>收货人信息</h3>
         <div class="address-box">
@@ -59,6 +54,8 @@ import Search from '@/components/Search';
 import GoodsListNav from '@/components/nav/GoodsListNav';
 import store from '@/vuex/store';
 import { mapState, mapActions } from 'vuex';
+import qs from 'qs'
+import axios from 'axios';
 export default {
   name: 'Order',
   beforeRouteEnter (to, from, next) {
@@ -67,52 +64,56 @@ export default {
   },
   created () {
     this.loadAddress();
+    axios.get('http://localhost:7000/cart/list/batch',{
+      params: {
+        userId: 1,
+        commodityIds: [this.$route.params.ids]
+      },
+       paramsSerializer: function(params) {
+              return qs.stringify(params, {arrayFormat: 'repeat'})
+          }
+    }).then(res => {
+      this.datas = res.data.data;
+      for(let i=0;i<this.datas.length;i++){
+        axios.get('http://localhost:9500/commodity/selectOne/'+this.datas[i].commodityId).then(res => {
+          this.columns.title = res.data.data.commoditySubHead;
+          console.dir(this.columns.title)
+        });
+      }
+    })
   },
   data () {
     return {
       goodsCheckList: [],
+      datas: [],
       columns: [
-        {
-          type: 'selection',
-          width: 58,
-          align: 'center'
-        },
         {
           title: '图片',
           key: 'img',
           width: 86,
-          render: (h, params) => {
-            return h('div', [
-              h('img', {
-                attrs: {
-                  src: params.row.img
-                }
-              })
-            ]);
-          },
           align: 'center'
         },
         {
           title: '标题',
           key: 'title',
-          align: 'center'
-        },
-        {
-          title: '套餐',
-          width: 198,
-          key: 'package',
-          align: 'center'
+          align: 'center',
         },
         {
           title: '数量',
-          key: 'count',
+          key: 'commodityCount',
           width: 68,
           align: 'center'
         },
         {
-          title: '价格',
+          title: '单价',
           width: 68,
           key: 'price',
+          align: 'center'
+        },
+        {
+          title: '总价',
+          width: 80,
+          key: 'totalPrice',
           align: 'center'
         }
       ],
