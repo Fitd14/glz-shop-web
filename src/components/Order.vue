@@ -59,7 +59,7 @@
           </p>
           <div class="pay-btn">
             <router-link to="/pay">
-              <Button type="error" size="large">支付订单</Button>
+              <Button type="error" @click="addOrder(orderDTO)" size="large">支付订单</Button>
             </router-link>
           </div>
         </div>
@@ -73,10 +73,9 @@
   import GoodsListNav from '@/components/nav/GoodsListNav';
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
-  import {get} from "../service/http.service";
+  import {get, post} from "../service/http.service";
   import {getUserInfo} from "../vuex/actions";
 
-  const url = 'http://localhost:8070';
   export default {
     name: 'Order',
     beforeRouteEnter(to, from, next) {
@@ -90,8 +89,8 @@
         console.dir(this.user)
         this.userId = this.user.userId;
         this.getShipAddress(this.userId);
+        this.orderDTO.userId = this.userId;
       });
-
     },
     data() {
       return {
@@ -100,9 +99,17 @@
         disabledSingle: true,
         disabledGroup: [{name: '爪哇犀牛1'}, {name: '爪哇犀牛2'}, {name: '爪哇犀牛3'}],
         temp: {
-          id: null,
           name: '未选择',
+          // item.province + item.city + item.area + item.region;
+          province: '',
+          city: '',
+          region: '',
           address: '请选择地址'
+        },
+        orderDTO: {
+          userId: '',
+          cids: [],
+          shipId: ''
         },
         userName: 'ez',
         shipAddress: [],
@@ -171,12 +178,17 @@
     },
     methods: {
       ...mapActions(['loadAddress']),
+      addOrder(val) {
+        post('/order/add', val).then(res => {
+          console.dir(res.data);
+        })
+        console.dir('success' + val.userId + val.cids + val.shipId)
+      },
       select(selection, row) {
         console.log(selection);
         this.goodsCheckList = selection;
       },
       order() {
-        console.log('111111111');
         this.login(this.name).then(result => {
           console.log(result);
         });
@@ -197,8 +209,10 @@
             father.temp.id = item.id;
             father.temp.name = item.name;
             father.temp.address = item.province + item.city + item.area + item.region;
+            this.orderDTO.shipId = father.temp.id
             console.dir('----------');
-            console.dir(father.temp.id)
+            console.dir(father.temp.id);
+            console.dir(this.orderDTO.shipId);
           }
         });
       },

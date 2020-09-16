@@ -271,7 +271,6 @@
             this.tableDataEnd = this.datas;
           });
         });
-
       },
       currentChangePage(list) {
         let from = (this.currentPage - 1) * this.pageSize;
