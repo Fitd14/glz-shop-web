@@ -7,7 +7,6 @@
         小提示
         <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
         <template slot="desc">请点击商品前的选择框，选择购物车中的商品，点击付款即可。</template>
-        <button @click="getData">aaa</button>
       </Alert>
       <Table border ref="selection" :columns="columns" :data="shoppingCart" size="large" @on-selection-change="select"
              no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买"></Table>
@@ -33,7 +32,7 @@
                    </RadioGroup>-->
                 <RadioGroup vertical @on-change="changeModel">
                   <Radio :label="item.id" v-for="item in shipAddress" :value="item.id" :key="item.id">
-                    <span>{{item.name}}</span>
+                    <span>{{item.province + item.city + item.area + item.region}}</span>
                   </Radio>
                 </RadioGroup>
                 <!-- <RadioGroup vertical size="large" @on-change="changeModel">
@@ -75,6 +74,7 @@
   import GoodsListNav from '@/components/nav/GoodsListNav';
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
+  import {get} from "../service/http.service";
 
   const url = 'http://localhost:8070';
   export default {
@@ -163,12 +163,6 @@
     },
     methods: {
       ...mapActions(['loadAddress']),
-      getData() {
-        console.dir('aaa');
-        this.$http.get('http://localhost:8070/order/aaa').then(function (reponse) {
-          console.dir(reponse.body);
-        });
-      },
       select(selection, row) {
         console.log(selection);
         this.goodsCheckList = selection;
@@ -194,15 +188,15 @@
           if (item.id === data) {
             father.temp.id = item.id;
             father.temp.name = item.name;
-            father.temp.address = item.province + item.city + item.area+item.region;
+            father.temp.address = item.province + item.city + item.area + item.region;
             console.dir('----------');
             console.dir(father.temp.id)
           }
         });
       },
       getShipAddress(userId) {
-        axios.get(url + '/ship/area/' + userId).then(res => {
-          this.shipAddress = res.data.data;
+        get('/ship/area/' + userId).then(res => {
+          this.shipAddress = res.data;
           console.dir(this.shipAddress)
         })
       }

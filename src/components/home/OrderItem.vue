@@ -55,6 +55,7 @@
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import router from '../../router';
+  import {get, post} from "../../service/http.service";
 
   const url = 'http://localhost:80';
   const userId = 1;
@@ -79,9 +80,9 @@
     created() {
       this.orderNo = this.$route.query.orderNo;
       console.dir(this.orderNo);
-      axios.get(url + '/orderItem/list?orderNo=' + this.orderNo).then(result => {
+      get('/orderItem/list?orderNo=' + this.orderNo).then(result => {
         console.dir(result.data);
-        this.datas = result.data.data;
+        this.datas = result.data;
         console.dir(this.datas.length);
         this.totalNum = this.datas.length;
       });
@@ -122,7 +123,7 @@
             this.orderBack.commodityId = data.commodityId;
             this.orderBack.memo = value;
             console.dir(this.orderBack);
-            axios.post(url + '/orderBack/insert', this.orderBack).then(res => {
+            post('/orderBack/insert', this.orderBack).then(res => {
               console.dir(res.data);
             });
             data.status = 2;

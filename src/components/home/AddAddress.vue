@@ -44,7 +44,7 @@
   import {addShipAddress, loadAddress} from '../../vuex/actions';
   import axios from 'axios';
   import router from '../../router';
-  import {get} from '../../service/http.service'
+  import {get, post} from '../../service/http.service'
 
   const url = 'http://localhost:80';
   export default {
@@ -94,6 +94,7 @@
           }
         });*/
         get('/ship/area/id/' + this.id).then(res => {
+          console.dir(res);
           if (res.data != null) {
             this.formData = res.data;
             console.dir(this.formData);
@@ -106,11 +107,14 @@
     methods: {
       ...mapActions(['loadAddress', 'addShipAddress', 'UserLogin']),
       aaa(data) {
+        console.dir('--------------------')
         console.dir(data);
+        console.dir('----------------')
         if (data.area !== '' && data.city !== '' && data.region !== ''
           && data.name !== '' && data.postCode !== '') {
           let i = data.id;
-          axios.post(url + '/ship/add', data).then(res => {
+          console.dir(data)
+          post('/ship/add', data).then(res => {
             console.dir(res.data);
             if (i !== '') {
               this.$message({
@@ -136,7 +140,7 @@
         console.dir('aaa');
         console.dir(this.formData);
         console.dir(dat);
-        axios.post('http://localhost:8070/ship/add', dat).then(res => {
+        post('/ship/add', dat).then(res => {
           console.dir(res.data)
         })
       },

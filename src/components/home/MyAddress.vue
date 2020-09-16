@@ -49,7 +49,6 @@
   import store from '@/vuex/store';
   import {get} from "../../service/http.service";
   import {mapState, mapActions} from 'vuex';
-  import router from '../../router';
 
   const url = 'http://localhost:80';
   const userId = 1;

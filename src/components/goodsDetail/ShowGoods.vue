@@ -116,7 +116,7 @@
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import axios from "axios";
-  import {get} from "../../service/http.service";
+  import {get, post} from "../../service/http.service";
   import global_variable from "../../common/global_variable";
 
   const url = 'http://localhost:80';
@@ -191,6 +191,9 @@
       addShopCart(cart) {
         this.cartDemo.id = this.commondity.id;
         console.dir(this.cartDemo);
+        post('url + /cart/add').then(res => {
+          console.dir(res.data);
+        })
       },
       addShoppingCartBtn() {
         const index1 = parseInt(this.selectBoxIndex / 3);
