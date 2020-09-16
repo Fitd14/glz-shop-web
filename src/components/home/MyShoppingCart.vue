@@ -52,7 +52,15 @@
     mapActions
   } from 'vuex';
   import axios from 'axios';
+<<<<<<< HEAD
+  import qs from 'qs'
+  import http from '../../service/http.service';
+  const url = 'http://localhost:80';
+  const url2 = 'http://localhost:9500';
+  var name = '';
+=======
   const url = 'http://localhost:7000';
+>>>>>>> 6898dcc618eefedba94f355f61f09aaa93d09a7f
   export default {
     inject: ['reload'],
     name: 'MyShoppingCart',
@@ -66,7 +74,12 @@
       };
     },
     created() {
+<<<<<<< HEAD
+      this.$http.get('http://localhost:80/cart/list/1').then(res => {
+        console.dir(res.data.data);
+=======
       axios.get(url + '/cart/list/1').then(res => {
+>>>>>>> 6898dcc618eefedba94f355f61f09aaa93d09a7f
         this.datas = res.data.data;
       });
     },
