@@ -162,33 +162,6 @@ export default {
   width: 1008px;
   margin: 0px auto;
 }
-/*****************************秒杀专栏开始*****************************/
-/*秒杀专栏*/
-.seckill {
-  width: 100%;
-  height: 330px;
-  margin: 15px auto;
-  background-color: #fff;
-}
-.seckill-head {
-  width: 100%;
-  height: 50px;
-  background-color: #e01222;
-}
-.seckill-icon {
-  width: 68px;
-  height: 100%;
-  float: left;
-}
-.seckill-icon img {
-  width: 35px;
-  height: 35px;
-  margin-top: 6px;
-  margin-left: 15px;
-  animation-name: shake-clock;
-  animation-duration: 0.3s;
-  animation-iteration-count: infinite; /*设置无线循环*/
-}
 /*定义闹钟震动动画关键帧*/
 @keyframes shake-clock {
   0% {
