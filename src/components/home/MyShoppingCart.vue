@@ -73,6 +73,7 @@
     },
     created() {
       axios.get(url + '/cart/list/1').then(res => {
+        console.dir(res.data.data);
         this.datas = res.data.data;
         for(let i=0; i < this.datas.length; i++){
           axios.get(url2+'/commodity/selectOne/'+this.datas[i].commodityId).then(res => {

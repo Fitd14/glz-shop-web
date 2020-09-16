@@ -1,13 +1,12 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import {options} from 'vue-resource/src/util';
-import {HttpService} from '../service/http.service';
-import {UserLogin} from '../service/base.service';
-
+import {get, post} from '../service/http.service';
+import store from './store';
+import stores from '../common/store';
 Vue.use(VueResource);
 
 // 获取秒杀数据
-export const loadSeckillsInfo = ({ commit }) => {
+export const loadSeckillsInfo = ({commit}) => {
   return new Promise((resolve, reject) => {
     const data = [
       {
@@ -57,7 +56,7 @@ export const loadSeckillsInfo = ({ commit }) => {
 };
 
 // 获取轮播(营销)图片
-export const loadCarouselItems = ({ commit }) => {
+export const loadCarouselItems = ({commit}) => {
   return new Promise((resolve, reject) => {
     const data = {
       carouselItems: [
@@ -77,11 +76,11 @@ export const loadCarouselItems = ({ commit }) => {
 };
 
 // 加载电脑专栏数据
-export const loadComputer = ({ commit }) => {
+export const loadComputer = ({commit}) => {
   return new Promise((resolve, reject) => {
     const computer = {
       title: '电脑数码',
-      link: [ '电脑馆', '游戏极品', '装机大师', '职场焕新', '女神频道', '虚拟现实', '二合一平板', '电子教育', '万物周刊' ],
+      link: ['电脑馆', '游戏极品', '装机大师', '职场焕新', '女神频道', '虚拟现实', '二合一平板', '电子教育', '万物周刊'],
       detail: [
         {
           bigImg: 'static/img/index/computer/item-computer-1.jpg',
@@ -150,11 +149,11 @@ export const loadComputer = ({ commit }) => {
 };
 
 // 加载爱吃专栏数据
-export const loadEat = ({ commit }) => {
+export const loadEat = ({commit}) => {
   return new Promise((resolve, reject) => {
     const eat = {
       title: '爱吃',
-      link: [ '休闲零食', '坚果', '牛奶', '饮料冲调', '食用油', '大米', '白酒', '红酒', '烧烤食材', '牛排', '樱桃' ],
+      link: ['休闲零食', '坚果', '牛奶', '饮料冲调', '食用油', '大米', '白酒', '红酒', '烧烤食材', '牛排', '樱桃'],
       detail: [
         {
           bigImg: 'static/img/index/eat/item-eat-1-1.jpg',
@@ -223,7 +222,7 @@ export const loadEat = ({ commit }) => {
 };
 
 // 请求获得商品详细信息
-export const loadGoodsInfo = ({ commit }) => {
+export const loadGoodsInfo = ({commit}) => {
   commit('SET_LOAD_STATUS', true);
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -370,8 +369,8 @@ export const loadGoodsInfo = ({ commit }) => {
         ],
         remarks: {
           goodAnalyse: 90,
-          remarksTags: [ '颜色可人', '实惠优选', '严丝合缝', '极致轻薄', '质量没话说', '比定做还合适', '完美品质', '正品行货', '包装有档次', '不容易发热', '已经买第二个', '是全覆盖' ],
-          remarksNumDetail: [ 2000, 3000, 900, 1 ],
+          remarksTags: ['颜色可人', '实惠优选', '严丝合缝', '极致轻薄', '质量没话说', '比定做还合适', '完美品质', '正品行货', '包装有档次', '不容易发热', '已经买第二个', '是全覆盖'],
+          remarksNumDetail: [2000, 3000, 900, 1],
           detail: [
             {
               username: 'p****1',
@@ -425,7 +424,7 @@ export const loadGoodsInfo = ({ commit }) => {
 };
 
 // 获取商品列表
-export const loadGoodsList = ({ commit }) => {
+export const loadGoodsList = ({commit}) => {
   commit('SET_LOAD_STATUS', true);
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -612,14 +611,14 @@ export const loadGoodsList = ({ commit }) => {
 };
 
 // 添加购物车
-export const addShoppingCart = ({ commit }, data) => {
+export const addShoppingCart = ({commit}, data) => {
   return new Promise((resolve, reject) => {
     commit('ADD_SHOPPING_CART', data);
   });
 };
 
 // 获取用户推荐
-export const loadRecommend = ({ commit }) => {
+export const loadRecommend = ({commit}) => {
   return new Promise((resolve, reject) => {
     const data = [
       [
@@ -671,7 +670,7 @@ export const loadRecommend = ({ commit }) => {
   });
 };
 
-export const loadAddress = ({ commit }) => {
+export const loadAddress = ({commit}) => {
   return new Promise((resolve, reject) => {
     const address = [
       {
@@ -699,72 +698,91 @@ export const loadAddress = ({ commit }) => {
   });
 };
 
-export const loadShoppingCart = ({ commit }) => {
+export const loadShoppingCart = ({commit}) => {
   return new Promise((resolve, reject) => {
-    const data = [{
-      goods_id: 1529931938150,
-      count: 1,
-      img: 'static/img/goodsDetail/pack/1.jpg',
-      package: '4.7英寸-深邃蓝',
-      price: 28,
-      title: '苹果8/7手机壳iPhone7 Plus保护壳全包防摔磨砂硬外壳'
-    }];
-    commit('SET_SHOPPING_CART', data);
+    // const data = [{
+    //   goods_id: 1529931938150,
+    //   count: 1,
+    //   img: 'static/img/goodsDetail/pack/1.jpg',
+    //   package: '4.7英寸-深邃蓝',
+    //   price: 28,
+    //   title: '苹果8/7手机壳iPhone7 Plus保护壳全包防摔磨砂硬外壳'
+    // }];
+    // commit('SET_SHOPPING_CART', data);
+
   });
 };
 
 // 添加注册用户
-export const addSignUpUser = ({ commit }, data) => {
+export const addSignUpUser = ({commit}, data) => {
   return new Promise((resolve, reject) => {
-    const userArr = localStorage.getItem('users');
-    let users = [];
-    if (userArr) {
-      users = JSON.parse(userArr);
-    }
-    users.push(data);
-    localStorage.setItem('users', JSON.stringify(users));
+    post('/user/member/save', data).then(resp => {
+      resolve(resp);
+    });
   });
 };
 
 // 用户登录
-export const login = ({ commit }, data) => {
+export const login = ({commit}, data) => {
   return new Promise((resolve, reject) => {
-    console.log(resolve);
-    UserLogin(data);
-    // if (data.username === 'Gavin' && data.password === '123456') {
-    //   localStorage.setItem('loginInfo', JSON.stringify(data));
-    //   commit('SET_USER_LOGIN_INFO', data);
-    //   resolve(true);
-    //   return true;
-    // }
-    // const userArr = localStorage.getItem('users');
-    // console.log(userArr);
-    // if (userArr) {
-    //   const users = JSON.parse(userArr);
-    //   for (const item of users) {
-    //     if (item.username === data.username) {
-    //       localStorage.setItem('loginInfo', JSON.stringify(item));
-    //       commit('SET_USER_LOGIN_INFO', item);
-    //       resolve(true);
-    //       break;
-    //     }
-    //   }
-    // } else {
-    //   resolve(false);
-    // }
+    post('/auth', data).then(resp => {
+      if (resp.code === '200') {
+        stores.commit('set_token', resp.data.token);
+        localStorage.setItem('loginInfo', resp.data.username);
+        resolve(resp.data.username);
+      } else {
+        resolve(false);
+      }
+    });
   });
 };
 
 // 退出登陆
-export const signOut = ({ commit }) => {
+export const signOut = ({commit}) => {
   localStorage.removeItem('loginInfo');
   commit('SET_USER_LOGIN_INFO', {});
+  post('/logout');
 };
 
 // 判断是否登陆
-export const isLogin = ({ commit }) => {
+export const isLogin = ({commit}) => {
   const user = localStorage.getItem('loginInfo');
-  if (user) {
-    commit('SET_USER_LOGIN_INFO', JSON.parse(user));
+  if (user !== null) {
+    // commit('SET_USER_LOGIN_INFO', JSON.parse(user));
+    return getLoginInfo();
   }
+};
+
+// 获取用户信息
+export const getUserInfo = ({commit}) => {
+  return new Promise((resolve, reject) => {
+    get('/user/member/getInfo').then(resp => {
+      resolve(resp);
+    });
+  });
+};
+
+// 获取登陆用户信息
+export const getLoginInfo = (state) => {
+  // let username = stores.state.userInfo.username;
+  let loginInfo = localStorage.getItem('loginInfo');
+  return loginInfo;
+};
+
+// 是否需要验证码
+export const getIsCaptcha = ({commit}, data) => {
+  return new Promise((resolve, reject) => {
+    get('/auth/isUseCaptcha?username=' + data.username).then(resp => {
+      resolve(resp.data);
+    });
+  });
+};
+
+// 获取验证码
+export const getCaptcha = ({commit}) => {
+  return new Promise((resolve, reject) => {
+    get('/auth/captcha').then(resp => {
+      resolve(resp);
+    });
+  });
 };

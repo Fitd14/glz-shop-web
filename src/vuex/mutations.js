@@ -1,3 +1,4 @@
+import stores from '../common/store';
 // 设置注册步骤
 export const SET_SIGN_UP_SETP = (state, step) => {
   state.signUpStep = step;
@@ -91,4 +92,15 @@ export const SET_RECOMMEND_INFO = (state, data) => {
 // 设置收获地址
 export const SET_USER_ADDRESS = (state, data) => {
   state.address = data;
+};
+
+// 设置用户信息
+export const SET_USER_INFO = (state, username) => {
+  state.userInfo.username = username;
+};
+
+export const GET_TOKEN = (state) => {
+  let token = stores.state.token;
+  console.log(token);
+  return token;
 };

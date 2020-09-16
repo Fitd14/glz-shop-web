@@ -22,6 +22,15 @@
                       <Icon type="ios-locked-outline" slot="prepend"> </Icon>
                   </i-input>
               </FormItem>
+              <FormItem prop="captcha" v-if="isCaptcha" >
+                  <el-image :src="formDate.url" width="100px" height="30px"/>
+                  <i-input type="text" v-model="formDate.captchaCode" clearable size="large" placeholder="验证码">
+                    <Icon type="ios-locked-outline" slot="prepend"> </Icon>
+                  </i-input>
+              </FormItem>
+              <FormItem>
+                <a href="" style="float: right">忘记密码</a>
+              </FormItem>
               <FormItem>
                   <Button type="error" size="large" @click="handleSubmit('formInline')" long>登录</Button>
               </FormItem>
@@ -36,13 +45,19 @@
 <script>
 import store from '@/vuex/store';
 import { mapMutations, mapActions } from 'vuex';
+
 export default {
   name: 'Login',
+  inject: ['reload'],
   data () {
     return {
+      isCaptcha: false,
       formDate: {
         username: '',
-        password: ''
+        password: '',
+        captchaId: '',
+        captchaCode: '',
+        url: ''
       },
       ruleInline: {
         username: [
@@ -57,18 +72,34 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_USER_LOGIN_INFO']),
-    ...mapActions(['login']),
+    ...mapActions(['login', 'getIsCaptcha', 'getCaptcha']),
     handleSubmit (name) {
-      const father = this;
-      console.log(this.formDate.username);
+      const formData = new FormData();
+      formData.append('username', this.formDate.username);
+      formData.append('password', this.formDate.password);
+      formData.append('captchaId', this.formDate.captchaId);
+      formData.append('captchaCode', this.formDate.captchaCode);
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.login(father.formDate).then(result => {
+          this.login(formData).then(result => {
             if (result) {
               this.$Message.success('登录成功');
-              father.$router.push('/');
+              this.$store.state.userInfo.username = result;
+              this.$store.commit('SET_USER_INFO', result);
+              this.reload();
+              this.$router.push('/');
             } else {
               this.$Message.error('用户名或密码错误');
+              this.getIsCaptcha({username: this.formDate.username}).then(result => {
+                if (result) {
+                  this.isCaptcha = true;
+                  this.getCaptcha().then(result => {
+                    console.log(result);
+                    this.formDate.captchaId = result.data.captchaId;
+                    this.formDate.url = result.data.captchaImg;
+                  });
+                }
+              });
             }
           });
         } else {
@@ -105,7 +136,7 @@ export default {
 }
 .login-container {
   width: 80%;
-  height: 280px;
+  height: 360px;
   border: #ED3F14 solid 1px;
 }
 .login-header {
@@ -121,4 +152,5 @@ export default {
   width: 80%;
   margin: 30px auto;
 }
+
 </style>

@@ -43,7 +43,10 @@ export default {
     ...mapState(['signUpStep'])
   },
   methods: {
-    ...mapMutations(['SET_SIGN_UP_SETP'])
+    ...mapMutations(['SET_SIGN_UP_SETP']),
+    register() {
+
+    }
   },
   store,
   mounted () {

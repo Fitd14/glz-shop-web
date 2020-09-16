@@ -17,14 +17,14 @@
           </Dropdown>
         </li>
       </ul>
-      <ul class="detail">
-        <li class="first" v-show="!userInfo.username">
+      <ul class="detail" v-if="isRefresh">
+        <li class="first" v-show="!this.userInfo">
           你好，请<router-link to="/login">登录 <Icon type="person"></Icon></router-link> |<span class="text-color-red"><router-link to="/SignUp">免费注册 <Icon type="person-add"></Icon></router-link></span>
         </li>
-        <li v-show="!!userInfo.username">
+        <li v-show="!!this.userInfo">
           <Dropdown>
             <p class="username-p">
-              <Avatar class="person-icon" icon="person" size="small" /> <span class="username">{{userInfo.username}} </span>
+              <Avatar class="person-icon" icon="person" size="small" /> <span class="username">{{this.userInfo}} </span>
             </p>
             <DropdownMenu slot="list">
                 <div class="my-page">
@@ -98,27 +98,32 @@
 <script>
 import store from '@/vuex/store';
 import { mapState, mapActions } from 'vuex';
+import {getLoginInfo} from '../../vuex/actions';
 export default {
   name: 'M-Header',
   created () {
     this.isLogin();
+    this.userInfo = getLoginInfo();
   },
+  inject: ['reload'],
   data () {
     return {
-      city: '珠海',
+      city: '河南',
       cityArr: [
         ['北京', '上海', '天津', '重庆', '广州'],
         ['深圳', '河南', '辽宁', '吉林', '江苏'],
         ['江西', '四川', '海南', '贵州', '云南'],
         ['西藏', '陕西', '甘肃', '青海', '珠海']
-      ]
+      ],
+      userInfo: '',
+      isRefresh: true
     };
   },
   computed: {
-    ...mapState(['userInfo', 'shoppingCart'])
+    ...mapState(['shoppingCart'])
   },
   methods: {
-    ...mapActions(['signOut', 'isLogin']),
+    ...mapActions(['signOut', 'isLogin', 'getLoginInfo']),
     changeCity (city) {
       this.city = city;
     },
@@ -130,7 +135,7 @@ export default {
     },
     signOutFun () {
       this.signOut();
-      this.$router.push('/');
+      this.reload();
     }
   },
   store
