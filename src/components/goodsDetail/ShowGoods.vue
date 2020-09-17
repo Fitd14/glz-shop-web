@@ -118,19 +118,19 @@
   import axios from "axios";
   import {get, post} from "../../service/http.service";
   import global_variable from "../../common/global_variable";
-  import {getUserInfo} from "../../vuex/actions";
 
   const url = 'http://localhost:80';
   export default {
     name: 'ShowGoods',
     data() {
       return {
-        userId: '',
-        commodityId: '',
         cartDemo: {
           userId: '',
           commodityId: '',
-          commodityCount: '',
+          commodityCount: ''
+        },
+        filters: {
+          id: ''
         },
         radio1: '',
         tempUrl: '',
@@ -174,11 +174,12 @@
       }
     },
     created() {
-      this.commodityId = this.$route.query.commodityId
+      this.filters.id = this.$route.query.id;
       global_variable.setCid('1303874819187662849');
+      console.log(this.filters.id);
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
-        this.colorBox = res.data.inputList.split(",");
+        this.colorBox = res.data.inputList.split(',');
         console.dir(this.colorBox)
       });
       this.getOneGoods(global_variable.cid);
@@ -216,8 +217,6 @@
       getOneGoods(ids) {
         get('/commodity/selectOne/' + ids).then(res => {
           this.commondity = res.data;
-          console.dir('-----------------')
-          console.dir(this.commondity);
           this.tempUrl = 'http://192.168.115.58:4396//0aab0461d7b041e6aaa40608002f4548.jpg';
           console.dir(this.tempUrl);
           global_variable.setGoods(this.commondity);

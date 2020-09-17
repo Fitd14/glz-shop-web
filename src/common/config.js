@@ -1,4 +1,5 @@
-const baseUrl = 'http://192.168.115.61:80';
+const baseUrl = 'http://localhost:9500';
+const baseUrl1 = 'http://192.168.115.59:80';
 const config = {
   locale: 'zh-CN', // en-US, zh-CN
   url: baseUrl,

@@ -25,7 +25,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
-              size="mini" @click="odBack(scope.row)">
+              size="mini" @click="open(scope.row)">
               申请退货
             </el-button>
             <el-button
@@ -101,17 +101,6 @@
           return '退货失败';
         }
       },
-      odBack(row) {
-        console.dir(row)
-        if (row.status !== 0 && row.status !== 1) {
-          this.$message({
-            type: 'success',
-            message: '此订单已退货或正在申请退货'
-          });
-        } else {
-          this.$router.push({name: "OrderBack", query: {id: row.id}})
-        }
-      },
       open(data) {
         if (data.status !== 0 && data.status !== 1) {
           this.$message({
@@ -162,11 +151,9 @@
         console.log(`当前页: ${val}`);
         this.currentPage = val; // 动态改变
       }
-    }
-    ,
+    },
     store
-  }
-  ;
+  };
 </script>
 
 <style scoped>

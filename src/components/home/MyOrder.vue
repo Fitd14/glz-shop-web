@@ -271,6 +271,7 @@
             this.tableDataEnd = this.datas;
           });
         });
+
       },
       currentChangePage(list) {
         let from = (this.currentPage - 1) * this.pageSize;
@@ -317,7 +318,7 @@
         this.currentPage = val;    //动态改变
       },
       unpay(userId, payStatus) {
-        get('/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
+        axios.get(url + '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
           console.dir(res)
           this.datas = res.data;
           this.totalNum = this.datas.length;
@@ -325,7 +326,7 @@
         });
       },
       getStatus(userId, status) {
-        get('/order/status?userId=' + userId + '&status=' + status).then(res => {
+        axios.get(url + '/order/status?userId=' + userId + '&status=' + status).then(res => {
           this.datas = res.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
