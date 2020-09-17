@@ -125,6 +125,7 @@
     name: 'ShowGoods',
     data() {
       return {
+        id: '',
         userId: '',
         commodityId: '',
         cartDemo: {
@@ -174,8 +175,8 @@
       }
     },
     created() {
-      this.commodityId = this.$route.query.commodityId
-      global_variable.setCid('1303874819187662849');
+      this.id = this.$route.query.id
+      global_variable.setCid(this.id);
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
         this.colorBox = res.data.inputList.split(",");
@@ -216,10 +217,6 @@
       getOneGoods(ids) {
         get('/commodity/selectOne/' + ids).then(res => {
           this.commondity = res.data;
-          console.dir('-----------------')
-          console.dir(this.commondity);
-          this.tempUrl = 'http://192.168.115.58:4396//0aab0461d7b041e6aaa40608002f4548.jpg';
-          console.dir(this.tempUrl);
           global_variable.setGoods(this.commondity);
         })
       }
