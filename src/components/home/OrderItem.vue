@@ -101,6 +101,17 @@
           return '退货失败';
         }
       },
+      //  this.$router.push({name: 'OrderBack', query: {orderNo: row.orderNo, commodityId: row.commodityId}})
+      alBack(row) {
+        if (data.status !== 0 && data.status !== 1) {
+          this.$message({
+            type: 'success',
+            message: '此订单已退货或正在申请退货'
+          });
+        } else {
+          this.$router.push({name: 'OrderBack', query: {orderNo: row.orderNo, commodityId: row.commodityId}})
+        }
+      },
       open(data) {
         if (data.status !== 0 && data.status !== 1) {
           this.$message({

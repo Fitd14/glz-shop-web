@@ -176,7 +176,6 @@
     created() {
       this.commodityId = this.$route.query.commodityId
       global_variable.setCid('1303874819187662849');
-      //global_variable.setCid(this.commodityId);
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
         this.colorBox = res.data.inputList.split(",");

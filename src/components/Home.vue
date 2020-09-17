@@ -31,13 +31,6 @@
             </template>
             <MenuItem name="myShoppingCart">我的购物车</MenuItem>
           </Submenu>
-          <Submenu name="4">
-            <template slot="title">
-                <!-- <Icon type="ios-cart"></Icon> -->
-                <span>个人信息</span>
-            </template>
-            <MenuItem name="myUserInfo">修改个人信息</MenuItem>
-          </Submenu>
         </Menu>
       </Sider>
       <Layout class="layout">
