@@ -15,39 +15,46 @@
         <el-button @click="resetForm('numberValidateForm')">重置</el-button>
       </el-form-item>
     </el-form>-->
-  <el-form label-width="100px">
-    <el-form-item label="详情描述">
-      <el-input></el-input>
-    </el-form-item>
-    <el-form-item label="详情描述">
-      <el-upload
-        action='http://192.168.115.61:80/orderFile/upload'
-        :show-file-list="true"
-        :auto-upload="true"
-        :accept="'image/*'"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :before-upload="handleBeforeUpload"
-        :on-progress="handleProgress"
-      >
-        <el-button type="primary" size="medium">上传图片</el-button>
-      </el-upload>
-      <!--
-        action: 图片上传的地址
-        show-file-list: 是否显示文件上传列表
-        accept: 可接受的上传类型，image/*为图片
-        headers: 头部信息
-        on-success: 上传成功事件
-        on-error: 上传失败事件
-        before-upload: 上传前处理事件，返回一个值，值为false将阻止上传
-        on-progress: 上传中事件
-        -->
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary">提交</el-button>
-      <el-button>重置</el-button>
-    </el-form-item>
-  </el-form>
+  <div>
+    <div class="backTo">
+      <span v-on:click="back">返回</span>
+    </div>
+    <div>
+      <el-form label-width="100px">
+        <el-form-item label="详情描述" v-model="orderBack.memo">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="图片描述">
+          <el-upload
+            action='http://192.168.115.61:80/orderFile/upload'
+            :show-file-list="true"
+            :auto-upload="true"
+            :accept="'image/*'"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+            :before-upload="handleBeforeUpload"
+            :on-progress="handleProgress"
+          >
+            <el-button type="primary" size="medium">上传图片</el-button>
+          </el-upload>
+          <!--
+            action: 图片上传的地址
+            show-file-list: 是否显示文件上传列表
+            accept: 可接受的上传类型，image/*为图片
+            headers: 头部信息
+            on-success: 上传成功事件
+            on-error: 上传失败事件
+            before-upload: 上传前处理事件，返回一个值，值为false将阻止上传
+            on-progress: 上传中事件
+            -->
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary">提交</el-button>
+          <el-button>重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -63,8 +70,9 @@
     name: 'AddAddress',
     data() {
       return {
-        orderNo: '',
-        commodityId: '',
+        item: null,
+        id: '',
+        orderItem: null,
         orderBack: {
           orderNo: '',
           commodityId: '',
@@ -74,12 +82,28 @@
       };
     },
     created() {
-      this.orderNo = this.$route.query.orderNo;
-      this.commodityId = this.$route.query.commodityId;
-      console.dir(this.orderNo + '---' + this.commodityId)
+      this.id = this.$route.query.id;
+      if (this.id !== '') {
+        get('/orderItem/sel/' + this.id).then(res => {
+          this.orderItem = res.data;
+          console.dir(this.orderItem);
+        })
+      }
     },
     methods: {
       ...mapActions(['loadAddress', 'addShipAddress', 'UserLogin']),
+      subBack() {
+        this.orderItem.status = 2;
+        if (this.id !== '') {
+          console.dir(this.orderBack);
+         /* post('/orderBack/insert', this.orderItem).then(res => {
+            console.dir(res.data);
+          });*/
+        }
+      },
+      back() {
+        this.$router.go(-1);//返回上一层
+      },
       /*----- 以下为常用处理代码 ------*/
       handleSuccess(response, file, fileList) {
         console.dir(response);
