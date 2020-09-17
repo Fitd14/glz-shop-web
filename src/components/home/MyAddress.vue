@@ -1,152 +1,138 @@
 <template>
   <div>
-    <div class="address-box" v-for="(item, index) in address" :key="index">
-      <div class="address-header">
-        <span>{{item.name}}</span>
-        <div class="address-action">
-          <span @click="edit(index)"><Icon type="edit"></Icon> 修改</span>
-          <span @click="del(index)"><Icon type="trash-a"></Icon> 删除</span>
-        </div>
-      </div>
-      <div class="address-content">
-        <p><span class="address-content-title"> 收 货 人 :</span> {{item.name}}</p>
-        <p><span class="address-content-title">收货地区:</span> {{item.province}} {{item.city}} {{item.area}}</p>
-        <p><span class="address-content-title">收货地址:</span> {{item.address}}</p>
-        <p><span class="address-content-title">邮政编码:</span> {{item.postalcode}}</p>
-      </div>
+    <div style="margin-top: 20px">
+      <el-button @click="toggleSelection()">取消选择</el-button>
     </div>
-    <Modal v-model="modal" width="530">
-        <p slot="header">
-          <Icon type="edit"></Icon>
-          <span>修改地址</span>
-        </p>
-        <div>
-            <Form :model="formData" label-position="left" :label-width="100" :rules="ruleInline">
-              <FormItem label="收件人" prop="name">
-                <i-input v-model="formData.name" size="large"></i-input>
-              </FormItem>
-              <FormItem label="收件地区" prop="address">
-                <Distpicker :province="formData.province" :city="formData.city" :area="formData.area" @province="getProvince" @city="getCity" @area="getArea"></Distpicker>
-              </FormItem>
-              <FormItem label="收件地址" prop="address">
-                <i-input v-model="formData.address" size="large"></i-input>
-              </FormItem>
-              <FormItem label="手机号码" prop="phone">
-                <i-input v-model="formData.phone" size="large"></i-input>
-              </FormItem>
-              <FormItem label="邮政编码" prop="postalcode">
-                <i-input v-model="formData.postalcode" size="large"></i-input>
-              </FormItem>
-            </Form>
-        </div>
-        <div slot="footer">
-            <Button type="primary" size="large" long @click="editAction">修改</Button>
-        </div>
-    </Modal>
+    <div>
+      <el-table border
+                :data="datas.slice((currentPage-1)* pageSize,currentPage* pageSize)"
+                :current-page.sync="currentPage"
+                stripe style="width: 100%;" height='450px' ref="multipleTable">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column v-if="false" prop="id" label="ID"></el-table-column>
+        <el-table-column prop="name" label="收件人"></el-table-column>
+        <el-table-column prop="province" label="省"></el-table-column>
+        <el-table-column prop="city" label="市"></el-table-column>
+        <el-table-column prop="area" label="县"></el-table-column>
+        <el-table-column prop="region" label="收件地址"></el-table-column>
+        <el-table-column prop="phone" label="手机号码"></el-table-column>
+        <el-table-column prop="postCode" label="邮政编码"></el-table-column>
+        <el-table-column label="操作" width="200px" fixed="right">
+          <template slot-scope="scope">
+            <el-button
+              size="mini" @click="handleEdit(scope.row)">
+              更新
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger" @click="handleDelete(scope.row)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[1, 5, 10, 20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalNum">
+      </el-pagination>
+    </div>
   </div>
 </template>
-
 <script>
-import store from '@/vuex/store';
-import { mapState, mapActions } from 'vuex';
-import Distpicker from 'v-distpicker';
-export default {
-  name: 'MyAddress',
-  data () {
-    return {
-      modal: false,
-      formData: {
-        name: '',
-        address: '',
-        phone: '',
-        postalcode: '',
-        province: '广东省',
-        city: '广州市',
-        area: '天河区'
-      },
-      ruleInline: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        address: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ],
-        postalcode: [
-          { required: true, message: '请输入邮政编码', trigger: 'blur' }
-        ],
-        phone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' },
-          { type: 'string', pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: '手机号格式出错', trigger: 'blur' }
-        ]
-      }
-    };
-  },
-  created () {
-    this.loadAddress();
-  },
-  computed: {
-    ...mapState(['address'])
-  },
-  methods: {
-    ...mapActions(['loadAddress']),
-    edit (index) {
-      this.modal = true;
-      this.formData.province = this.address[index].province;
-      this.formData.city = this.address[index].city;
-      this.formData.area = this.address[index].area;
-      this.formData.address = this.address[index].address;
-      this.formData.name = this.address[index].name;
-      this.formData.phone = this.address[index].phone;
-      this.formData.postalcode = this.address[index].postalcode;
+  import store from '@/vuex/store';
+  import {get} from "../../service/http.service";
+  import {getUserInfo} from '../../vuex/actions';
+  import {mapState, mapActions} from 'vuex';
+
+  const url = 'http://localhost:80';
+  export default {
+    inject: ['reload'],
+    name: 'MyShoppingCart',
+    data() {
+      return {
+        userId: '',
+        user: null,
+        datas: [],
+        multipleTable: [],
+        currentPage: 1,//默认显示第一页
+        pageSize: 5,//默认每页显示10条
+        totalNum: 1000 //总页数
+      };
     },
-    editAction () {
-      this.modal = false;
-      this.$Message.success('修改成功');
-    },
-    del (index) {
-      this.$Modal.confirm({
-        title: '信息提醒',
-        content: '你确定删除这个收货地址',
-        onOk: () => {
-          this.$Message.success('删除成功');
-        },
-        onCancel: () => {
-          this.$Message.info('取消删除');
-        }
+    created() {
+      getUserInfo().then(res => {
+        this.user = res.data;
+        console.dir(this.user.userId);
+        this.userId = this.user.userId;
+        get('/ship/area/' + this.userId).then(result => {
+          console.dir('--------------------------')
+          console.dir(this.userId);
+          console.dir(result.data);
+          if (result.data != null) {
+            this.datas = result.data;
+            console.dir(this.datas);
+            this.totalNum = this.datas.length;
+          } else {
+            this.datas = null;
+            this.totalNum = 0;
+          }
+        });
       });
-    }
-  },
-  components: {
-    Distpicker
-  },
-  store
-};
+    },
+    computed: {},
+    methods: {
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.pageSize = val;    //动态改变
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage = val;    //动态改变
+      },
+      handleEdit(row) {
+        this.$router.push({name: 'AddAddress', query: {id: row.id}})
+      },
+      handleDelete(row) {
+        console.log(row.id);
+        this.$confirm('是否要删除该地址', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          get('/ship/area/del/' + row.id).then(res => {
+            if (res.data.code === '200') {
+              this.reload();
+              console.dir('success');
+            }
+          });
+        });
+      },
+      toggleSelection(rows) {
+        console.dir(rows);
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
+
+    },
+    store
+  };
 </script>
 
 <style scoped>
-.address-box {
-  padding: 15px;
-  margin: 15px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px #ccc;
-}
-.address-header {
-  height: 35px;
-  display: flex;
-  justify-content: space-between;
-  color: #232323;
-  font-size: 18px;
-}
-.address-content {
-  font-size: 14px;
-}
-.address-content-title {
-  color: #999;
-}
-.address-action span{
-  margin-left: 15px;
-  font-size: 14px;
-  color: #2d8cf0;
-  cursor: pointer;
-}
+  .go-to {
+    margin: 15px;
+    display: flex;
+    justify-content: flex-end;
+  }
 </style>

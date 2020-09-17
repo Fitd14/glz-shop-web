@@ -55,7 +55,8 @@
   } from 'vuex';
   import axios from 'axios';
   import qs from 'qs'
-  const url = 'http://localhost:7000';
+  import {get} from '../../service/http.service';
+  const url = 'http://localhost:80';
   const url2 = 'http://localhost:9500';
   var name = '';
   export default {
@@ -72,7 +73,8 @@
       };
     },
     created() {
-      axios.get(url + '/cart/list/1').then(res => {
+      axios.get(url+'/cart/list/1').then(res => {
+        console.dir(res.data.data);
         this.datas = res.data.data;
         for(let i=0; i < this.datas.length; i++){
           axios.get(url2+'/commodity/selectOne/'+this.datas[i].commodityId).then(res => {

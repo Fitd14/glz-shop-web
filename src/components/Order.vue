@@ -11,24 +11,31 @@
         <div class="address-box">
           <div class="address-check">
             <div class="address-check-name">
-              <span>
-                <Icon type="ios-checkmark-outline"></Icon> {{checkAddress.name}}
-              </span>
+              <span><Icon type="ios-checkmark-outline"></Icon> {{temp.name}}</span>
             </div>
             <div class="address-detail">
-              <p>{{checkAddress.address}}</p>
+              <p>{{temp.address}}</p>
             </div>
           </div>
           <Collapse>
             <Panel>
               选择地址
               <p slot="content">
-                <RadioGroup vertical size="large" @on-change="changeAddress">
-                  <Radio :label="item.addressId" v-for="(item, index) in address" :key="index">
-                    <span>{{item.name}} {{item.province}} {{item.city}} {{item.address}} {{item.phone}}
-                      {{item.postalcode}}</span>
+                <!--   <RadioGroup vertical size="large" @on-change="changeAddress">
+                     <Radio :label="item.addressId" v-for="(item, index) in address" :key="index">
+                       <span>{{item.name}} {{item.province}} {{item.city}} {{item.address}} {{item.phone}} {{item.postalcode}}</span>
+                     </Radio>
+                   </RadioGroup>-->
+                <RadioGroup vertical @on-change="changeModel">
+                  <Radio :label="item.id" v-for="item in shipAddress" :value="item.id" :key="item.id">
+                    <span>{{item.province + item.city + item.area + item.region}}</span>
                   </Radio>
                 </RadioGroup>
+                <!-- <RadioGroup vertical size="large" @on-change="changeModel">
+                   <Radio :label="item.id" v-for="(item, index) in shipAddress" :key="index">
+                     <span>{{item.name}}</span>
+                   </Radio>
+                 </RadioGroup>-->
               </p>
             </Panel>
           </Collapse>
@@ -44,11 +51,12 @@
       </div>
       <div class="pay-container">
         <div class="pay-box">
-          <p><span>提交订单应付总额：</span> <span class="money">
-              <Icon type="social-yen"></Icon> {{totalPrice.toFixed(2)}}
-            </span></p>
+          <p><span>提交订单应付总额：</span> <span class="money"><Icon type="social-yen"></Icon> {{totalPrice.toFixed(2)}}</span>
+          </p>
           <div class="pay-btn">
-            <router-link to="/pay"><Button type="error" size="large">支付订单</Button></router-link>
+            <router-link to="/pay">
+              <Button type="error" size="large">支付订单</Button>
+            </router-link>
           </div>
         </div>
       </div>
@@ -66,6 +74,9 @@
   } from 'vuex';
   import qs from 'qs'
   import axios from 'axios';
+  import {getUserInfo} from "../vuex/actions";
+
+  const url = 'http://localhost:8070';
   export default {
     name: 'Order',
     beforeRouteEnter(to, from, next) {
@@ -93,7 +104,13 @@
           });
         };
 
-      })
+      }),
+      getUserInfo().then(res => {
+        this.user = res.data;
+        console.dir(this.user)
+        this.userId = this.user.userId;
+        this.getShipAddress(this.userId);
+      });
     },
     data() {
       return {
@@ -167,17 +184,41 @@
     methods: {
       ...mapActions(['loadAddress']),
       select(selection, row) {
+        console.log(selection);
         this.goodsCheckList = selection;
+      },
+      order() {
+        console.log('111111111');
+        this.login(this.name).then(result => {
+          console.log(result);
+        });
       },
       changeAddress(data) {
         const father = this;
         this.address.forEach(item => {
           if (item.addressId === data) {
             father.checkAddress.name = item.name;
-            father.checkAddress.address =
-              `${item.name} ${item.province} ${item.city} ${item.address} ${item.phone} ${item.postalcode}`;
+            father.checkAddress.address = `${item.name} ${item.province} ${item.city} ${item.address} ${item.phone} ${item.postalcode}`;
           }
         });
+      },
+      changeModel(data) {
+        const father = this;
+        this.shipAddress.forEach(item => {
+          if (item.id === data) {
+            father.temp.id = item.id;
+            father.temp.name = item.name;
+            father.temp.address = item.province + item.city + item.area + item.region;
+            console.dir('----------');
+            console.dir(father.temp.id)
+          }
+        });
+      },
+      getShipAddress(userId) {
+        get('/ship/area/' + userId).then(res => {
+          this.shipAddress = res.data;
+          console.dir(this.shipAddress)
+        })
       }
     },
     mounted() {

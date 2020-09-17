@@ -14,22 +14,22 @@
             </li>
           </ul>
         </div>
-        <div class="item-class-content" v-for="(item, index) in classify1Info" :key="index">
+        <div class="item-class-content" v-for="(item, index) in classify2Info" :key="index">
           <div class="item-content-top">
             <div class="item-big-img">
-              <router-link to="/goodsList">
-                <img v-bind:src="item.photo" alt="" style="width: 180px; height: 260px;">
+              <router-link :to="{path:'/goodsList',query:{id:item.id}}">
+                <img v-bind:src="item.photo" alt="" style="width: 180px; height: 260px;" width="160px" height="160px">
               </router-link>
             </div>
             <div class="item-four-img">
-              <div class="item-four-detail" v-for="(subItem, index) in item.itemFour" :key="index">
+              <div class="item-four-detail" v-for="(item, index) in classify1Info" :key="index">
                 <div class="item-four-detail-text">
-                  <p class="pt_bi_tit">{{subItem.title}}</p>
-                  <p class="pt_bi_promo">{{subItem.intro}}</p>
+                  <p class="pt_bi_tit">{{item.brand}}</p>
+                  <p class="pt_bi_promo">{{item.price}}</p>
                 </div>
                 <div class="item-four-detail-img">
-                  <router-link to="/goodsList">
-                    <img :src="subItem.img" alt="">
+                  <router-link :to="{path:'/goodsList',query:{id:item.category}}">
+                    <img :src="item.photo" alt="" width="130px" height="130px">
                   </router-link>
                 </div>
               </div>
@@ -44,6 +44,8 @@
           </div>
         </div>
       </div>
+
+
       <!-- 爱吃专场 -->
       <div class="item-class">
         <div class="item-class-head item-class-eat-head">
@@ -92,6 +94,7 @@ import HomeNav from '@/components/nav/HomeNav';
 import store from '@/vuex/store';
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import axios from 'axios';
+import {get} from '../service/http.service';
 export default {
   name: 'Index',
   created () {
@@ -100,14 +103,21 @@ export default {
     this.loadComputer();
     this.loadEat();
     this.loadShoppingCart();
-    axios.get('http://localhost:9500/commodityCategory/selById?id=56').then(res => {
-      this.classify1 = res.data.data;
-    });
-    axios.get('http://localhost:9500/commodityCategory/subclass?parentId=56').then(res => {
-      this.classify1Subclass = res.data.data;
-    });
-    axios.get('http://localhost:9500/commodity/category?category=56').then(res => {
-      this.classify1Info = res.data.data;
+    get('/commodityCategory/selById?id=55').then(res => {
+      this.classify1 = res.data;
+      console.log(this.classify1);
+      get('commodityCategory/subclass?parentId=' + this.classify1.id).then(res => {
+        this.classify1Subclass = res.data;
+        console.log(this.classify1Subclass);
+      });
+      get('/commodity/category?category=' + 68).then(res => {
+        this.classify2Info = res.data;
+        console.log(this.classify1Info);
+      });
+      get('/commodity/category?category=' + 56).then(res => {
+        this.classify1Info = res.data;
+        console.log(this.classify1Info);
+      });
     });
   },
   mounted () {
@@ -121,7 +131,8 @@ export default {
       setIntervalObj: null,
       classify1: [],
       classify1Subclass: [],
-      classify1Info: []
+      classify1Info: [],
+      classify2Info: []
     };
   },
   methods: {
@@ -150,33 +161,6 @@ export default {
 .content {
   width: 1008px;
   margin: 0px auto;
-}
-/*****************************秒杀专栏开始*****************************/
-/*秒杀专栏*/
-.seckill {
-  width: 100%;
-  height: 330px;
-  margin: 15px auto;
-  background-color: #fff;
-}
-.seckill-head {
-  width: 100%;
-  height: 50px;
-  background-color: #e01222;
-}
-.seckill-icon {
-  width: 68px;
-  height: 100%;
-  float: left;
-}
-.seckill-icon img {
-  width: 35px;
-  height: 35px;
-  margin-top: 6px;
-  margin-left: 15px;
-  animation-name: shake-clock;
-  animation-duration: 0.3s;
-  animation-iteration-count: infinite; /*设置无线循环*/
 }
 /*定义闹钟震动动画关键帧*/
 @keyframes shake-clock {

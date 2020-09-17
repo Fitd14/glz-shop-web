@@ -41,7 +41,7 @@
         ref="itemPanel1" @mouseleave="hideDetail()">
         <ul>
           <li v-for="(items, index) in panelData1" :key="index" class="detail-item-row">
-            <router-link :to="{path:'/goodList/',query:{id:items.id}}">
+            <router-link :to="{path:'/goodsList',query:{id:items.id}}">
               <span class="detail-item">{{items.name}}</span>
             </router-link>
           </li>
@@ -57,6 +57,7 @@
     mapState
   } from 'vuex';
   import axios from 'axios';
+  import {get} from '../../service/http.service';
   export default {
     name: 'HomeNav',
     data() {
@@ -79,8 +80,11 @@
       };
     },
     created() {
-      axios.get('http://localhost:9500/commodityCategory/selByParentId/0').then(res => {
-        this.datas = res.data.data;
+      // axios.get('http://localhost:9500/commodityCategory/selByParentId/0').then(res => {
+      //   this.datas = res.data.data;
+      // });
+      get('/commodityCategory/selByParentId/0').then(res => {
+        this.datas = res.data;
       });
     },
     computed: {
@@ -88,12 +92,15 @@
     },
     methods: {
       showDetail(index) {
-        axios.get('http://localhost:9500/commodityCategory/subclass?parentId=' + index).then(res => {
-          this.panelData1 = res.data.data;
+        // axios.get('http://localhost:9500/commodityCategory/subclass?parentId=' + index).then(res => {
+        //   this.panelData1 = res.data.data;
+        // });
+        get('/commodityCategory/selByParentId/' + index).then(res => {
+          this.panelData1 = res.data;
         });
         this.panel1 = true;
       },
-      showDetail2(){
+      showDetail2() {
         this.panel1 = true;
       },
       hideDetail() {
