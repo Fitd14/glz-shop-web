@@ -84,9 +84,12 @@
         <div>
           <Carousel autoplay loop>
               <CarouselItem  v-for="(item, index) in lunbo" :key="index">
-                <router-link to="/goodsList">
+                <a :href="item.url">
+                  <img :src="item.pic" height="340" width="760">
+                </a>
+                <!--<router-link to="/goodsDetails">
                   <img :src="item" height="340" width="760">
-                </router-link>
+                </router-link>-->
               </CarouselItem>
           </Carousel>
         </div>
@@ -139,6 +142,8 @@
 <script>
 import store from '@/vuex/store';
 import { mapState } from 'vuex';
+import {get} from "../../service/http.service";
+
 export default {
   name: 'HomeNav',
   data () {
@@ -262,7 +267,7 @@ export default {
     ...mapState(['marketing'])
   },
   created() {
-    this.$http.get('http://localhost/shop/adver/getShowList').then(res => {
+    this.$http.get('http://localhost:80/shop/adver/getShowList').then(res => {
       this.lunbo = res.data.data;
     });
   },

@@ -33,6 +33,12 @@
           </Submenu>
           <Submenu name="4">
             <template slot="title">
+              <span>收藏</span>
+            </template>
+            <MenuItem name="myCollect">我的收藏</MenuItem>
+          </Submenu>
+          <Submenu name="4">
+            <template slot="title">
                 <!-- <Icon type="ios-cart"></Icon> -->
                 <span>个人信息</span>
             </template>
@@ -65,7 +71,8 @@ export default {
         'myAddress': '我的收货地址',
         'addAddress': '添加收货地址',
         'myOrder': '我的订单',
-        'myShoppingCart': '我的购物车'
+        'myShoppingCart': '我的购物车',
+        'myCollect':'我的收藏'
       }
     };
   },

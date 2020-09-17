@@ -87,24 +87,13 @@
             </div>
           </div>
         </div>
-        <!-- 白条分期 -->
-        <!--  <div class="item-select">
-            <div class="item-select-title">
-              <p>白条分期</p>
-            </div>
-            <div class="item-select-row">
-              <div class="item-select-class" v-for="(item,index) in hirePurchase" :key="index">
-                <Tooltip :content="item.tooltip" placement="top-start">
-                  <span>{{item.type}}</span>
-                </Tooltip>
-              </div>
-            </div>
-          </div>-->
+
         <br>
         <div class="add-buy-car-box">
           <div class="add-buy-car">
             <InputNumber :min="1" v-model="cartDemo.commodityCount" size="large"></InputNumber>
             <Button type="error" size="large" @click="addShopCart()">加入购物车</Button>
+            <Button type="error" size="large" @click="addCollect()">加入收藏</Button>
           </div>
         </div>
       </div>
@@ -116,6 +105,7 @@
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import axios from "axios";
+  import {getUserInfo} from '../../vuex/actions';
   import {get, post} from "../../service/http.service";
   import global_variable from "../../common/global_variable";
 
@@ -124,6 +114,7 @@
     name: 'ShowGoods',
     data() {
       return {
+        userId: '',
         cartDemo: {
           userId: '',
           commodityId: '',
@@ -188,7 +179,18 @@
       showBigImg(index) {
         this.imgIndex = index;
       },
+      addCollect() {
+        getUserInfo().then(res => {
+          this.userId = res.data.userId;
+          get("/shop/collect/create/"+this.commondity.id+"/"+this.userId).then(res=>{
+            console.dir(res);
+          })
+        });
+
+      },
+
       addShopCart(cart) {
+
         this.cartDemo.id = this.commondity.id;
         console.dir(this.cartDemo);
         post('url + /cart/add').then(res => {
