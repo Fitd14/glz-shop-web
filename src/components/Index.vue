@@ -29,16 +29,16 @@
                 </div>
                 <div class="item-four-detail-img">
                   <router-link :to="{path:'/goodsList',query:{id:item.category}}">
-                    <img :src="item.photo" alt="" width="110px" height="110px">
+                    <img :src="item.photo" alt="" width="100px" height="100px">
                   </router-link>
                 </div>
               </div>
             </div>
           </div>
           <div class="item-content-bottom">
-            <div class="item-content-bottom-img" v-for="(subImg, index) in classify3Info" :key="index">
-              <router-link :to="{path:'/goodsList',query:{id:item.category}}">
-                <img :src="subImg.photo" width="180px" height="150px">
+            <div class="item-content-bottom-img" v-for="(subImg, index) in itemContent" :key="index">
+              <router-link to="/goodsList">
+                <img :src="subImg">
               </router-link>
             </div>
           </div>
@@ -104,6 +104,7 @@ export default {
     get('/commodityCategory/selById?id=55').then(res => {
       this.classify1 = res.data;
       console.log(this.classify1);
+      console.log(this.computer.detail.itemContent);
       get('commodityCategory/subclass?parentId=' + this.classify1.id).then(res => {
         this.classify1Subclass = res.data;
         console.log(this.classify1Subclass);
@@ -112,12 +113,8 @@ export default {
         this.classify2Info = res.data;
         console.log(this.classify1Info);
       });
-      get('/commodity/category?category=' + 54).then(res => {
+      get('/commodity/categorycount', {category: this.classify1.children, count: 4}).then(res => {
         this.classify1Info = res.data;
-        console.log(this.classify1Info);
-      });
-      get('/commodity/limit', {pageNo: 0, pageSize: 3}).then(res => {
-        this.classify3Info = res.data;
         console.log(this.classify1Info);
       });
     });
@@ -135,7 +132,12 @@ export default {
       classify1Subclass: [],
       classify1Info: [],
       classify2Info: [],
-      classify3Info: []
+      classify3Info: [],
+      itemContent: [
+        'static/img/index/computer/item-computer-2-6.jpg',
+        'static/img/index/computer/item-computer-2-7.jpg',
+        'static/img/index/computer/item-computer-2-8.jpg'
+      ]
     };
   },
   methods: {

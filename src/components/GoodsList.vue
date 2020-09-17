@@ -130,7 +130,7 @@ export default {
     get('/commodity/category?category=' + this.filters.id).then(res => {
       this.goodList = res.data;
     });
-    this.loadGoodsList();
+    // this.loadGoodsList();
   },
   mounted () {
     this.searchItem = this.$route.query.sreachData;
@@ -249,6 +249,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  float: left;
 }
 .goods-show-info{
   width: 240px;
