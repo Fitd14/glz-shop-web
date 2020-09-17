@@ -127,7 +127,10 @@
         cartDemo: {
           userId: '',
           commodityId: '',
-          commodityCount: '',
+          commodityCount: ''
+        },
+        filters: {
+          id: ''
         },
         radio1: '',
         tempUrl: '',
@@ -171,13 +174,13 @@
       }
     },
     created() {
-      global_variable.setCid('1303874819187662849');
+      this.filters.id = this.$route.query.id;
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
         this.colorBox = res.data.inputList.split(',');
         console.dir(this.colorBox)
       });
-      this.getOneGoods(global_variable.cid);
+      this.getOneGoods(this.filters.id);
     },
     methods: {
       ...mapActions(['addShoppingCart']),
@@ -210,10 +213,9 @@
         this.$router.push('/shoppingCart');
       },
       getOneGoods(ids) {
+        console.log(ids);
         get('/commodity/selectOne/' + ids).then(res => {
           this.commondity = res.data;
-          console.dir('-----------------')
-          console.dir(this.commondity);
           this.tempUrl = 'http://192.168.115.58:4396//0aab0461d7b041e6aaa40608002f4548.jpg';
           console.dir(this.tempUrl);
           global_variable.setGoods(this.commondity);
