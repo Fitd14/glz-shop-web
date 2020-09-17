@@ -17,8 +17,8 @@
         <div class="item-class-content" v-for="(item, index) in classify2Info" :key="index">
           <div class="item-content-top">
             <div class="item-big-img">
-              <router-link :to="{path:'/goodsList',query:{id:item.id}}">
-                <img v-bind:src="item.photo" alt="" style="width: 180px; height: 260px;" width="160px" height="160px">
+              <router-link :to="{path:'/goodsList',query:{id:item.category}}">
+                <img v-bind:src="item.photo" alt="" style="width: 180px; height: 240px;" width="150px" height="160px">
               </router-link>
             </div>
             <div class="item-four-img">
@@ -29,23 +29,21 @@
                 </div>
                 <div class="item-four-detail-img">
                   <router-link :to="{path:'/goodsList',query:{id:item.category}}">
-                    <img :src="item.photo" alt="" width="130px" height="130px">
+                    <img :src="item.photo" alt="" width="110px" height="110px">
                   </router-link>
                 </div>
               </div>
             </div>
           </div>
           <div class="item-content-bottom">
-            <div class="item-content-bottom-img" v-for="(subImg, index) in item.itemContent" :key="index">
-              <router-link to="/goodsList">
-                <img :src="subImg">
+            <div class="item-content-bottom-img" v-for="(subImg, index) in classify3Info" :key="index">
+              <router-link :to="{path:'/goodsList',query:{id:item.category}}">
+                <img :src="subImg.photo" width="180px" height="150px">
               </router-link>
             </div>
           </div>
         </div>
       </div>
-
-
       <!-- 爱吃专场 -->
       <div class="item-class">
         <div class="item-class-head item-class-eat-head">
@@ -114,8 +112,12 @@ export default {
         this.classify2Info = res.data;
         console.log(this.classify1Info);
       });
-      get('/commodity/category?category=' + 56).then(res => {
+      get('/commodity/category?category=' + 54).then(res => {
         this.classify1Info = res.data;
+        console.log(this.classify1Info);
+      });
+      get('/commodity/limit', {pageNo: 0, pageSize: 3}).then(res => {
+        this.classify3Info = res.data;
         console.log(this.classify1Info);
       });
     });
@@ -132,7 +134,8 @@ export default {
       classify1: [],
       classify1Subclass: [],
       classify1Info: [],
-      classify2Info: []
+      classify2Info: [],
+      classify3Info: []
     };
   },
   methods: {
