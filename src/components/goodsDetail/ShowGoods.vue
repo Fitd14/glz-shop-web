@@ -174,7 +174,7 @@
       global_variable.setCid('1303874819187662849');
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
-        this.colorBox = res.data.inputList.split(",");
+        this.colorBox = res.data.inputList.split(',');
         console.dir(this.colorBox)
       });
       this.getOneGoods(global_variable.cid);

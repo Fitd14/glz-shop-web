@@ -49,7 +49,7 @@
           <div class="goods-list">
             <div class="goods-show-info" v-for="(item, index) in goodList" :key="index">
               <div class="goods-show-img">
-                <router-link :to="{path:'/goodsDetail',query:{id:item.id}}"><img :src="item.photo" width="200px" height="160px"/></router-link>
+                <router-link :to="{path:'/goodsDetail',query:{id:item.id}}"><img :src="item.photo" width="220px" /></router-link>
               </div>
               <div class="goods-show-price">
                 <span>
