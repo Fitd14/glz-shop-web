@@ -3,13 +3,9 @@
     <Search></Search>
     <GoodsListNav></GoodsListNav>
     <div class="goods-list-container">
-      <Alert show-icon class="tips-box">
-        小提示
-        <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
-        <template slot="desc">请点击商品前的选择框，选择购物车中的商品，点击付款即可。</template>
-      </Alert>
-      <Table border ref="selection" :columns="columns" :data="shoppingCart" size="large" @on-selection-change="select"
-             no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买"></Table>
+      <Table border ref="selection" :columns="columns" :data="this.datas" size="large" @on-selection-change="select"
+        no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
+      </Table>
       <div class="address-container">
         <h3>收货人信息</h3>
         <div class="address-box">
@@ -72,7 +68,12 @@
   import Search from '@/components/Search';
   import GoodsListNav from '@/components/nav/GoodsListNav';
   import store from '@/vuex/store';
-  import {mapState, mapActions} from 'vuex';
+  import {
+    mapState,
+    mapActions
+  } from 'vuex';
+  import qs from 'qs'
+  import axios from 'axios';
   import {get, post} from "../service/http.service";
   import {getUserInfo} from "../vuex/actions";
 
@@ -89,8 +90,8 @@
         console.dir(this.user)
         this.userId = this.user.userId;
         this.getShipAddress(this.userId);
-        this.orderDTO.userId = this.userId;
       });
+
     },
     data() {
       return {
@@ -114,48 +115,52 @@
         userName: 'ez',
         shipAddress: [],
         goodsCheckList: [],
-        columns: [
-          {
-            type: 'selection',
-            width: 58,
-            align: 'center'
+        datas: [],
+        tt: [],
+        pp: [],
+        columns: [{
+          title: '图片',
+          key: 'photo',
+          width: 130,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('img', {
+                attrs: {
+                  src: this.pp[params.index]
+                },
+                style:{
+                  width: '100px',
+                  height: '80px'
+                }
+              })
+            ]);
           },
-          {
-            title: '图片',
-            key: 'img',
-            width: 86,
-            render: (h, params) => {
-              return h('div', [
-                h('img', {
-                  attrs: {
-                    src: params.row.img
-                  }
-                })
-              ]);
-            },
-            align: 'center'
-          },
+        },
           {
             title: '标题',
-            key: 'title',
-            align: 'center'
-          },
-          {
-            title: '套餐',
-            width: 198,
-            key: 'package',
-            align: 'center'
+            key: 'commoditySubHead',
+            align: 'center',
+            render: (h, params) => {
+              return h('span', this.tt[params.index])
+            }
           },
           {
             title: '数量',
-            key: 'count',
-            width: 68,
+            key: 'commodityCount',
+            width: 100,
             align: 'center'
           },
           {
-            title: '价格',
-            width: 68,
+            title: '单价',
+            width: 100,
             key: 'price',
+            align: 'center'
+          },
+          {
+            title: '总价',
+            width: 100,
+            key: 'totalPrice',
             align: 'center'
           }
         ],
