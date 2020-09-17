@@ -101,7 +101,6 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'M-Header',
   created () {
-    this.isLogin();
   },
   data () {
     return {
