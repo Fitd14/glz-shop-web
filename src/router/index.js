@@ -86,7 +86,7 @@ const router = new Router({
       component: ShoppingCart
     },
     {
-      path: '/order', // 订单页面
+      path: '/order/:ids', // 订单页面
       name: 'Order',
       meta: {requireAuth: true},
       component: Order

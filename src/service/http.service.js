@@ -6,7 +6,7 @@ import {GET_TOKEN} from '../vuex/mutations';
 import stores from '../common/store';
 
 axios.defaults.baseURL = config.api; // 设置axios的基础请求路径
-axios.defaults.timeout = 2000; // 设置axios的请求时间
+axios.defaults.timeout = 5000; // 设置axios的请求时间
 axios.defaults.headers.common['Authorization'] = stores.state.token;
 axios.defaults.transformResponse = function(data) {
   let parse = JSONBig.parse(data);
@@ -38,6 +38,7 @@ export function get(url, params = {}) {
     axios({
       url: url,
       method: 'get',
+      async: false,
       params: params
     }).then(response => {
       resolve(response);
