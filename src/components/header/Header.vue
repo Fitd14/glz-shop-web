@@ -46,42 +46,37 @@
               <Icon type="ios-cart-outline"></Icon> 购物车
             </a>
             <DropdownMenu slot="list">
-              <div class="shopping-cart-null" v-show="shoppingCart.length <= 0">
+              <div class="shopping-cart-null" v-show="carts.length <= 0">
                 <Icon type="ios-cart-outline" class="cart-null-icon"></Icon>
                 <span>你的购物车没有空空哦</span>
                 <span>赶快去添加商品吧~</span>
               </div>
-              <div class="shopping-cart-list" v-show="shoppingCart.length > 0">
-                <div class="shopping-cart-box" v-for="(item,index) in shoppingCart" :key="index">
+              <div class="shopping-cart-list" v-show="carts.length > 0">
+                <div class="shopping-cart-box" v-for="(item,index) in carts" :key="index">
                   <div class="shopping-cart-img">
-                    <img :src="item.img">
+                    <img :src="item.commodityImg">
                   </div>
                   <div class="shopping-cart-info">
                     <div class="shopping-cart-title">
-                      <p>{{item.title.substring(0, 22)}}...</p>
+                      <p>{{item.commodityName}}</p>
                     </div>
                     <div class="shopping-cart-detail">
                       <p>
-                        套餐:
+                        单价:
                         <span class="shopping-cart-text">
-                          {{item.package}}
+                          {{item.price}}
                         </span>
                         数量:
                         <span class="shopping-cart-text">
-                          {{item.count}}
+                          {{item.commodityCount}}
                         </span>
-                        价钱:
+                        总价:
                         <span class="shopping-cart-text">
-                          {{item.price}}
+                          {{item.totalPrice}}
                         </span>
                       </p>
                     </div>
                   </div>
-                </div>
-                <div class="go-to-buy">
-                  <Button type="error" size="small" @click="goToPay">
-                    去结账
-                  </Button>
                 </div>
               </div>
             </DropdownMenu>
@@ -97,17 +92,26 @@
 
 <script>
 import store from '@/vuex/store';
+import Vue from 'vue';
 import { mapState, mapActions } from 'vuex';
-import {getLoginInfo} from '../../vuex/actions';
+import {getLoginInfo,getUserInfo} from '../../vuex/actions';
+import {get} from '../../service/http.service';
 export default {
   name: 'M-Header',
   created () {
     this.isLogin();
     this.userInfo = getLoginInfo();
+    getUserInfo().then(res => {
+      this.userId = res.data.userId;
+      this.getCart(this.userId);
+    });
   },
   inject: ['reload'],
+
   data () {
     return {
+      userId:'',
+      carts: [],
       city: '河南',
       cityArr: [
         ['北京', '上海', '天津', '重庆', '广州'],
@@ -123,6 +127,11 @@ export default {
     ...mapState(['shoppingCart'])
   },
   methods: {
+    getCart(userId){
+      get('/cart/list/' + userId).then(res => {
+        this.carts = res.data;
+      });
+    },
     ...mapActions(['signOut', 'isLogin', 'getLoginInfo']),
     changeCity (city) {
       this.city = city;
