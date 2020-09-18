@@ -94,7 +94,7 @@
           this.user = res.data;
           this.userId = this.user.userId;
           get("shop/collect/getListUid/" + this.userId).then(res => {
-            this.datas = res.data.data;
+            this.datas = res.data;
             this.totalNum = this.datas.length;
             this.tableDataEnd = this.datas;
           })
