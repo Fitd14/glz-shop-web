@@ -11,6 +11,7 @@ import moment from 'vue-moment';
 import VDistpicker from 'v-distpicker';
 import store from './vuex/store';
 import stores from './common/store';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(ElementUI);

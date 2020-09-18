@@ -28,7 +28,7 @@
         <el-table-column label="操作" width="150px" fixed="right">
           <template slot-scope="scope">
             <el-button
-              size="mini" @click="getData(scope.row)">
+              size="mini" @click="getData(scope.row.comId)">
               详情
             </el-button>
             <el-button
@@ -55,8 +55,9 @@
 
 <script>
   import axios from 'axios';
-  import {get} from '../../service/http.service';
+
   import {getUserInfo} from '../../vuex/actions';
+  import {get} from '../../service/http.service';
   //import {get, post} from "../../service/http.service";
   import 'element-ui/lib/theme-chalk/index.css';
   import store from '@/vuex/store';
@@ -92,17 +93,17 @@
         getUserInfo().then(res=>{
           this.user = res.data;
           this.userId = this.user.userId;
-          /*get("shop/collect/getListUid/" + this.userId).then(res => {
-            this.datas = res.data.data;
-            this.totalNum = this.datas.length;
-            this.tableDataEnd = this.datas;
-          })*/
-          //未封装调用方法
-          this.$http.get(url+"shop/collect/getListUid/" + this.userId).then(res => {
+          get("shop/collect/getListUid/" + this.userId).then(res => {
             this.datas = res.data.data;
             this.totalNum = this.datas.length;
             this.tableDataEnd = this.datas;
           })
+          //未封装调用方法
+         /* this.$http.get(url+"shop/collect/getListUid/" + this.userId).then(res => {
+            this.datas = res.data.data;
+            this.totalNum = this.datas.length;
+            this.tableDataEnd = this.datas;
+          })*/
         });
 
       },
@@ -137,7 +138,7 @@
 
 
       getData(row) {
-        this.$router.push({name: 'OrderItem', query: {orderNo: row.orderNo}})
+        this.$router.push({name: 'GoodsDetail', query: {comId: row.comId}})
       },
 
 

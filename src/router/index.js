@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Index from '@/components/Index';
 import store from '../common/store';
-import stores from "../common/store";
+import stores from '../common/store';
 const Login = resolve => require(['@/components/Login'], resolve);
 const SignUp = resolve => require(['@/components/SignUp'], resolve);
 const CheckPhone = resolve => require(['@/components/signUp/CheckPhone'], resolve);
