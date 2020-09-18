@@ -22,6 +22,7 @@ const MyUserInfo = resolve => require(['@/components/home/MyUserInfo'], resolve)
 const OrderItem = resolve => require(['@/components/home/OrderItem'], resolve);
 const AddAddress = resolve => require(['@/components/home/AddAddress'], resolve);
 const MyOrder = resolve => require(['@/components/home/MyOrder'], resolve);
+const MyCollect = resolve => require(['@/components/home/MyCollect'], resolve);
 const OrderBack = resolve => require(['@/components/home/OrderBack'], resolve);
 const MyShoppingCart = resolve => require(['@/components/home/MyShoppingCart'], resolve);
 const Merchant = resolve => require(['@/components/Merchant'], resolve);
@@ -82,12 +83,12 @@ const router = new Router({
       component: GoodsDetail
     },
     {
-      path: '/shoppingCart', // 商品详情
+      path: '/shoppingCart/:id', // 商品详情
       name: 'ShoppingCart',
       component: ShoppingCart
     },
     {
-      path: '/order', // 订单页面
+      path: '/order/:ids', // 订单页面
       name: 'Order',
       meta: {requireAuth: true},
       component: Order
@@ -163,6 +164,12 @@ const router = new Router({
           meta: {
             keepAlive: true
           }*/
+          meta: {requireAuth: true},
+        },
+        {
+          path: 'myCollect',
+          name: 'MyCollect',
+          component: MyCollect,
           meta: {requireAuth: true},
         },
         {

@@ -4,14 +4,16 @@
     <GoodsListNav></GoodsListNav>
     <div class="goods-list-container">
       <Table border ref="selection" :columns="columns" :data="this.datas" size="large" @on-selection-change="select"
-             no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
+        no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
       </Table>
       <div class="address-container">
         <h3>收货人信息</h3>
         <div class="address-box">
           <div class="address-check">
             <div class="address-check-name">
-              <span><Icon type="ios-checkmark-outline"></Icon> {{temp.name}}</span>
+              <span>
+                <Icon type="ios-checkmark-outline"></Icon> {{temp.name}}
+              </span>
             </div>
             <div class="address-detail">
               <p>{{temp.address}}</p>
@@ -51,11 +53,13 @@
       </div>
       <div class="pay-container">
         <div class="pay-box">
-          <p><span>提交订单应付总额：</span> <span class="money"><Icon type="social-yen"></Icon> {{totalPrice.toFixed(2)}}</span>
+          <p><span>提交订单应付总额：</span> <span class="money">
+              <Icon type="social-yen"></Icon> {{this.tp}}
+            </span>
           </p>
           <div class="pay-btn">
             <router-link to="/pay">
-              <Button type="error" size="large">支付订单</Button>
+              <Button type="error" @click="addOrder(orderDTO)" size="large">支付订单</Button>
             </router-link>
           </div>
         </div>
@@ -74,9 +78,14 @@
   } from 'vuex';
   import qs from 'qs'
   import axios from 'axios';
-  import {getUserInfo} from "../vuex/actions";
+  import {
+    getUserInfo
+  } from "../vuex/actions";
+  import {
+    get,
+    post
+  } from '../service/http.service'
 
-  const url = 'http://localhost:8070';
   export default {
     name: 'Order',
     beforeRouteEnter(to, from, next) {
@@ -85,67 +94,67 @@
     },
     created() {
       this.loadAddress();
-      axios.get('http://localhost:7000/cart/list/batch', {
-        params: {
-          userId: 1,
-          commodityIds: [this.$route.params.ids]
-        },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, {
-            arrayFormat: 'repeat'
-          })
-        }
-      }).then(res => {
-        this.datas = res.data.data;
-        for (let i = 0; i < this.datas.length; i++) {
-          axios.get('http://localhost:9500/commodity/selectOne/' + this.datas[i].commodityId).then(res => {
-            this.tt.push(res.data.data.commoditySubHead);
-            this.pp.push(res.data.data.photo);
-          });
-        }
-        ;
-
-      }),
-        getUserInfo().then(res => {
-          this.user = res.data;
-          console.dir(this.user)
-          this.userId = this.user.userId;
-          this.getShipAddress(this.userId);
-        });
+      getUserInfo().then(res => {
+        this.user = res.data;
+        this.userId = this.user.userId;
+        this.getShipAddress(this.userId);
+        this.orderDTO.userId = this.userId;
+        this.getCart(this.userId);
+      });
     },
     data() {
       return {
         goodsCheckList: [],
+        disabledSingle: true,
+        disabledGroup: [{
+          name: '爪哇犀牛1'
+        }, {
+          name: '爪哇犀牛2'
+        }, {
+          name: '爪哇犀牛3'
+        }],
+        temp: {
+          id: null,
+          name: '未选择',
+          // item.province + item.city + item.area + item.region;
+          province: '',
+          city: '',
+          region: '',
+          address: '请选择地址'
+        },
+        orderDTO: {
+          userId: '',
+          cids: [],
+          shipId: ''
+        },
+        userName: 'ez',
+        shipAddress: [],
         datas: [],
-        tt: [],
-        pp: [],
+        tp: '',
         item: null,
         columns: [{
-          title: '图片',
-          key: 'photo',
-          width: 130,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('img', {
-                attrs: {
-                  src: this.pp[params.index]
-                },
-                style: {
-                  width: '100px',
-                  height: '80px'
-                }
-              })
-            ]);
-          },
-        },
-          {
-            title: '标题',
-            key: 'commoditySubHead',
+            title: '图片',
+            key: 'commodityImg',
+            width: 130,
             align: 'center',
             render: (h, params) => {
-              return h('span', this.tt[params.index])
-            }
+              return h('div', [
+                h('img', {
+                  attrs: {
+                    src: params.row.commodityImg
+                  },
+                  style: {
+                    width: '100px',
+                    height: '80px'
+                  }
+                })
+              ]);
+            },
+          },
+          {
+            title: '标题',
+            key: 'commodityName',
+            align: 'center',
           },
           {
             title: '数量',
@@ -185,12 +194,17 @@
     },
     methods: {
       ...mapActions(['loadAddress']),
+      addOrder(val) {
+        post('/order/add', val).then(res => {
+          console.dir(res.data);
+        })
+        console.dir('success' + val.userId + val.cids + val.shipId)
+      },
       select(selection, row) {
         console.log(selection);
         this.goodsCheckList = selection;
       },
       order() {
-        console.log('111111111');
         this.login(this.name).then(result => {
           console.log(result);
         });
@@ -200,7 +214,8 @@
         this.address.forEach(item => {
           if (item.addressId === data) {
             father.checkAddress.name = item.name;
-            father.checkAddress.address = `${item.name} ${item.province} ${item.city} ${item.address} ${item.phone} ${item.postalcode}`;
+            father.checkAddress.address =
+              `${item.name} ${item.province} ${item.city} ${item.address} ${item.phone} ${item.postalcode}`;
           }
         });
       },
@@ -211,6 +226,7 @@
             father.temp.id = item.id;
             father.temp.name = item.name;
             father.temp.address = item.province + item.city + item.area + item.region;
+            this.orderDTO.shipId = father.temp.id
             console.dir('----------');
             console.dir(father.temp.id)
           }
@@ -221,12 +237,24 @@
           this.shipAddress = res.data;
           console.dir(this.shipAddress)
         })
+      },
+      getCart(userId) {
+        post('/cart/add?userId=1&commodityId=e24b99842acc40019b44ffad63743ad4&commodityCount=2');
+        get('/cart/list/batch?userId=' + userId + '&commodityIds=' + this.$route.params.ids).then(res => {
+          this.datas = res.data;
+          console.dir(res.data);
+          this.tp = 0;
+          for (let i = 0; i < this.datas.length; i++) {
+            this.tp+=this.datas[i].totalPrice;
+            this.orderDTO.cids.push(this.datas[i].cartId);
+          };
+        })
       }
     },
     mounted() {
-      setTimeout(() => {
+      /* setTimeout(() => {
         this.$refs.selection.selectAll(true);
-      }, 500);
+      }, 500); */
     },
     components: {
       Search,
