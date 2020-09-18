@@ -25,9 +25,17 @@
               <div class="remarks-title">
                 <span>商品介绍</span>
               </div>
+              <div class="item-param-container">
+                <span class="item-param-title"></span>
+                <span class="item-param-content" style="text-indent:2em;">{{goods.productDetail}}</span>
+              </div>
+              <div class="remarks-title">
+                <span>图片展示</span>
+              </div>
               <div class="item-intro-img" ref="itemIntroGoods">
                <!-- <img :src="item" alt="" v-for="(item,index) in goodsInfo.goodsDetail" :key="index">-->
                 <img :src="goods.photo" alt="">
+
               </div>
             </TabPane>
             <TabPane label="规格参数">
@@ -37,13 +45,13 @@
                <div class="item-param-container">
                  <span class="item-param-box">
                    <span class="item-param-title">长: </span>
-                   <span class="item-param-content">{{goods.length}}</span>
+                   <span class="item-param-content">{{goods.length}}cm</span>
                     <span class="item-param-title">宽: </span>
-                   <span class="item-param-content">{{goods.weight}}</span>
+                   <span class="item-param-content">{{goods.weight}}cm</span>
                     <span class="item-param-title">高: </span>
-                   <span class="item-param-content">{{goods.height}}</span>
+                   <span class="item-param-content">{{goods.height}}cm</span>
                     <span class="item-param-title">重: </span>
-                   <span class="item-param-content">{{goods.width}}</span>
+                   <span class="item-param-content">{{goods.width}}kg</span>
                  </span>
                </div>
             </TabPane>
