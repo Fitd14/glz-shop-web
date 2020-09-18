@@ -89,7 +89,7 @@
         this.datas = res.data;
       });
       get('/shop/adver/getShowList').then(res => {
-        this.lunbo = res.data.data;
+        this.lunbo = res.data;
       });
     },
     computed: {
