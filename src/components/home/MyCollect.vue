@@ -23,7 +23,7 @@
         <el-table-column v-if="false" prop="userId" label="用户ID">
         </el-table-column>
         <el-table-column prop="commodityName" label="商品名"></el-table-column>
-        <el-table-column prop="price" label="商品价格"></el-table-column>
+        <el-table-column prop="price" label="收藏时商品价格"></el-table-column>
         <el-table-column prop="brand" label="商品分类"></el-table-column>
         <el-table-column label="操作" width="150px" fixed="right">
           <template slot-scope="scope">
@@ -57,7 +57,7 @@
   import axios from 'axios';
   import {get} from '../../service/http.service';
   import {getUserInfo} from '../../vuex/actions';
-  import {get, post} from "../../service/http.service";
+  //import {get, post} from "../../service/http.service";
   import 'element-ui/lib/theme-chalk/index.css';
   import store from '@/vuex/store';
 
@@ -88,28 +88,21 @@
     },
     computed: {},
     methods: {
-      setPaymentStatus(paymentStatus) {
-        if (paymentStatus === 1) {
-          return '已支付';
-        } else {
-          return '未支付';
-        }
-      },
       begin() {
         getUserInfo().then(res=>{
           this.user = res.data;
           this.userId = this.user.userId;
-          get("shop/collect/getListUid/" + this.userId).then(res => {
-            this.datas = res.data.data;
-            this.totalNum = this.datas.length;
-            this.tableDataEnd = this.datas;
-          })
-          //未封装调用方法
-         /* this.$http.get(url+"shop/collect/getListUid/" + this.userId).then(res => {
+          /*get("shop/collect/getListUid/" + this.userId).then(res => {
             this.datas = res.data.data;
             this.totalNum = this.datas.length;
             this.tableDataEnd = this.datas;
           })*/
+          //未封装调用方法
+          this.$http.get(url+"shop/collect/getListUid/" + this.userId).then(res => {
+            this.datas = res.data.data;
+            this.totalNum = this.datas.length;
+            this.tableDataEnd = this.datas;
+          })
         });
 
       },
@@ -155,17 +148,17 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          delete('shop/delete/' + row.id).then(res => {
-            if (res.data.code === '200') {
-              this.reload();
-              console.dir('success');
-            }
-            //未封装调用方法
-          /*this.$http.delete(url + 'shop/delete/' + row.id).then(res => {
+         /* delete('shop/delete/' + row.id).then(res => {
             if (res.data.code === '200') {
               this.reload();
               console.dir('success');
             }*/
+            //未封装调用方法
+          this.$http.delete(url + 'shop/delete/' + row.id).then(res => {
+            if (res.data.code === '200') {
+              this.reload();
+              console.dir('success');
+            }
           });
         });
       }
