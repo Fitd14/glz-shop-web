@@ -91,12 +91,11 @@
           console.dir(res);
           if (res.data != null) {
             this.formData = res.data;
-            console.dir(this.formData);
           } else {
             console.dir('aaa');
           }
         });
-      };
+      }
       getUserInfo().then(res => {
         this.user = res.data;
         console.dir(this.user)

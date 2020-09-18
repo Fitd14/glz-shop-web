@@ -4,7 +4,7 @@
     <GoodsListNav></GoodsListNav>
     <div class="goods-list-container">
       <Table border ref="selection" :columns="columns" :data="this.datas" size="large" @on-selection-change="select"
-        no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
+             no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
       </Table>
       <div class="address-container">
         <h3>收货人信息</h3>
@@ -90,7 +90,7 @@
           userId: 1,
           commodityIds: [this.$route.params.ids]
         },
-        paramsSerializer: function(params) {
+        paramsSerializer: function (params) {
           return qs.stringify(params, {
             arrayFormat: 'repeat'
           })
@@ -102,15 +102,16 @@
             this.tt.push(res.data.data.commoditySubHead);
             this.pp.push(res.data.data.photo);
           });
-        };
+        }
+        ;
 
       }),
-      getUserInfo().then(res => {
-        this.user = res.data;
-        console.dir(this.user)
-        this.userId = this.user.userId;
-        this.getShipAddress(this.userId);
-      });
+        getUserInfo().then(res => {
+          this.user = res.data;
+          console.dir(this.user)
+          this.userId = this.user.userId;
+          this.getShipAddress(this.userId);
+        });
     },
     data() {
       return {
@@ -118,25 +119,26 @@
         datas: [],
         tt: [],
         pp: [],
+        item: null,
         columns: [{
-            title: '图片',
-            key: 'photo',
-            width: 130,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('img', {
-                  attrs: {
-                    src: this.pp[params.index]
-                  },
-                  style:{
-                    width: '100px',
-                    height: '80px'
-                  }
-                })
-              ]);
-            },
+          title: '图片',
+          key: 'photo',
+          width: 130,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('img', {
+                attrs: {
+                  src: this.pp[params.index]
+                },
+                style: {
+                  width: '100px',
+                  height: '80px'
+                }
+              })
+            ]);
           },
+        },
           {
             title: '标题',
             key: 'commoditySubHead',

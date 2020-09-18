@@ -13,6 +13,12 @@
         <el-table-column v-if="false" prop="userId" label="用户ID"></el-table-column>
         <el-table-column v-if="false" prop="memo" label="描述"></el-table-column>
         <el-table-column prop="commodityId" label="商品ID"></el-table-column>
+        <el-table-column prop="commoditySubHead" label="商品名称"></el-table-column>
+        <el-table-column prop="img" label="商品图片">
+          <template slot-scope="scope">
+            <el-image :src="scope.row.img"></el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="number" label="数量"></el-table-column>
         <el-table-column prop="price" label="金额"></el-table-column>
         <el-table-column prop="status" label="状态">
@@ -139,7 +145,7 @@
             data.status = 2;
             console.dir('************');
             console.dir(data);
-            axios.post(url + '/orderItem/udp', data).then(res => {
+            post( '/orderItem/udp', data).then(res => {
               console.dir(res.data);
             });
           }).catch(() => {

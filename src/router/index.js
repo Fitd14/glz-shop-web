@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Index from '@/components/Index';
 import store from '../common/store';
 import stores from '../common/store';
+
 const Login = resolve => require(['@/components/Login'], resolve);
 const SignUp = resolve => require(['@/components/SignUp'], resolve);
 const CheckPhone = resolve => require(['@/components/signUp/CheckPhone'], resolve);
@@ -21,6 +22,7 @@ const MyUserInfo = resolve => require(['@/components/home/MyUserInfo'], resolve)
 const OrderItem = resolve => require(['@/components/home/OrderItem'], resolve);
 const AddAddress = resolve => require(['@/components/home/AddAddress'], resolve);
 const MyOrder = resolve => require(['@/components/home/MyOrder'], resolve);
+const OrderBack = resolve => require(['@/components/home/OrderBack'], resolve);
 const MyShoppingCart = resolve => require(['@/components/home/MyShoppingCart'], resolve);
 const Merchant = resolve => require(['@/components/Merchant'], resolve);
 
@@ -134,6 +136,12 @@ const router = new Router({
           name: 'OrderItem',
           meta: {requireAuth: true},
           component: OrderItem
+        },
+        {
+          path: 'orderBack',
+          name: 'OrderBack',
+          meta: {requireAuth: true},
+          component: OrderBack
         },
         {
           path: 'addAddress',
