@@ -46,28 +46,53 @@
               <li v-for="(item,index) in goodsTool" :key="index" @click="orderBy(item.en, index)"><span :class="{ 'goods-list-tool-active': isAction[index]}">{{item.title}} <Icon :type="icon[index]"></Icon></span></li>
             </ul>
           </div>
-          <div class="goods-list">
-            <div class="goods-show-info" v-for="(item, index) in goodList" :key="index">
-              <div class="goods-show-img">
-                <router-link :to="{path:'/goodsDetail',query:{id:item.id}}"><img :src="item.photo" width="220px" /></router-link>
-              </div>
-              <div class="goods-show-price">
-                <span>
-                  <Icon type="social-yen text-danger"></Icon>
-                  <span class="seckill-price text-danger">{{item.price}}</span>
-                </span>
-              </div>
-              <div class="goods-show-detail">
-                <span>{{item.commoditySubHead}}</span>
-              </div>
-              <!--<div class="goods-show-num">
-                剩余<span>{{item.remarks}}</span>人评价
-              </div>-->
-              <div class="goods-show-seller">
-                <span>{{item.commodityName}}</span>
-              </div>
-            </div>
-          </div>
+<!--          <div class="goods-list">-->
+            <row  :gutter="20">
+              <Col span="6" v-for="(item, index) in goodList" :key="index">
+                <div class="goods-show-img">
+                  <router-link :to="{path:'/goodsDetail',query:{id:item.id}}">
+                    <img :src="item.photo" width="220px" />
+                  </router-link>
+                </div>
+                <div class="goods-show-price">
+                  <span>
+                    <Icon type="social-yen text-danger"></Icon>
+                    <span class="seckill-price text-danger">{{item.price}}</span>
+                  </span>
+                </div>
+                <div class="goods-show-detail">
+                  <span>{{item.commoditySubHead}}</span>
+                </div>
+                <!--<div class="goods-show-num">
+                  剩余<span>{{item.remarks}}</span>人评价
+                </div>-->
+                <div class="goods-show-seller">
+                  <span>{{item.commodityName}}</span>
+                </div>
+              </Col>
+
+<!--            <div class="goods-show-info" v-for="(item, index) in goodList" :key="index">-->
+<!--              <div class="goods-show-img">-->
+<!--                <router-link :to="{path:'/goodsDetail',query:{id:item.id}}"><img :src="item.photo" width="220px" /></router-link>-->
+<!--              </div>-->
+<!--              <div class="goods-show-price">-->
+<!--                <span>-->
+<!--                  <Icon type="social-yen text-danger"></Icon>-->
+<!--                  <span class="seckill-price text-danger">{{item.price}}</span>-->
+<!--                </span>-->
+<!--              </div>-->
+<!--              <div class="goods-show-detail">-->
+<!--                <span>{{item.commoditySubHead}}</span>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;<div class="goods-show-num">-->
+<!--                剩余<span>{{item.remarks}}</span>人评价-->
+<!--              </div>&ndash;&gt;-->
+<!--              <div class="goods-show-seller">-->
+<!--                <span>{{item.commodityName}}</span>-->
+<!--              </div>-->
+<!--            </div>-->
+            </row>
+<!--          </div>-->
         </div>
       </div>
       <div class="goods-page">
@@ -130,7 +155,8 @@ export default {
     get('/commodity/category?category=' + this.filters.id).then(res => {
       this.goodList = res.data;
     });
-    // this.loadGoodsList();
+    // 侧边栏广告
+    this.loadGoodsList();
   },
   mounted () {
     this.searchItem = this.$route.query.sreachData;
@@ -249,7 +275,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  float: left;
+
 }
 .goods-show-info{
   width: 240px;
@@ -257,6 +283,7 @@ export default {
   margin: 15px 0px;
   border: 1px solid #fff;
   cursor: pointer;
+  float: left;
 }
 .goods-show-info:hover{
   border: 1px solid #ccc;
