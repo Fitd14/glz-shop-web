@@ -87,24 +87,13 @@
             </div>
           </div>
         </div>
-        <!-- 白条分期 -->
-        <!--  <div class="item-select">
-            <div class="item-select-title">
-              <p>白条分期</p>
-            </div>
-            <div class="item-select-row">
-              <div class="item-select-class" v-for="(item,index) in hirePurchase" :key="index">
-                <Tooltip :content="item.tooltip" placement="top-start">
-                  <span>{{item.type}}</span>
-                </Tooltip>
-              </div>
-            </div>
-          </div>-->
+
         <br>
         <div class="add-buy-car-box">
           <div class="add-buy-car">
             <InputNumber :min="1" v-model="cartDemo.commodityCount" size="large"></InputNumber>
             <Button type="error" size="large" @click="addShopCart()">加入购物车</Button>
+            <Button type="error" size="large" @click="addCollect()">加入收藏</Button>
           </div>
         </div>
       </div>
@@ -116,11 +105,11 @@
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import axios from "axios";
+  import {getUserInfo} from '../../vuex/actions';
   import {get, post} from "../../service/http.service";
   import global_variable from "../../common/global_variable";
-  import {getUserInfo} from "../../vuex/actions";
 
-  const url = 'http://localhost:80';
+
   export default {
     name: 'ShowGoods',
     data() {
@@ -174,7 +163,10 @@
       }
     },
     created() {
-      this.commodityId = this.$route.query.commodityId;
+      getUserInfo().then(res => {
+        this.userId = res.data.userId;
+      });
+      this.commodityId = this.$route.query.commodityId
       global_variable.setCid('1303874819187662849');
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
@@ -192,11 +184,14 @@
       showBigImg(index) {
         this.imgIndex = index;
       },
-      addShopCart(cart) {
+      addShopCart() {
         this.cartDemo.id = this.commondity.id;
-        console.dir(this.cartDemo);
-        post('url + /cart/add').then(res => {
-          console.dir(res.data);
+        post('/cart/add?userId='+this.userId+'&commodityId='+this.commondity.id+'&commodityCount='+this.cartDemo.commodityCount).then(res => {
+          if(res.code === '200'){
+            this.$router.push('/order/' + this.commondity.id);
+          }else{
+            alert('加入购物车失败！');
+          }
         })
       },
       addShoppingCartBtn() {

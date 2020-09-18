@@ -20,11 +20,14 @@
         <!-- 幻灯片 -->
         <div>
           <Carousel autoplay loop>
-            <CarouselItem v-for="(item, index) in marketing.CarouselItems" :key="index">
-              <router-link to="/goodsList">
-                <img :src="item">
-              </router-link>
-            </CarouselItem>
+              <CarouselItem  v-for="(item, index) in lunbo" :key="index">
+                <a :href="item.url">
+                  <img :src="item.pic" height="340" width="760">
+                </a>
+                <!--<router-link to="/goodsDetails">
+                  <img :src="item" height="340" width="760">
+                </router-link>-->
+              </CarouselItem>
           </Carousel>
         </div>
         <div class="nav-show">
@@ -53,9 +56,7 @@
 
 <script>
   import store from '@/vuex/store';
-  import {
-    mapState
-  } from 'vuex';
+  import { mapState } from 'vuex';
   import axios from 'axios';
   import {get} from '../../service/http.service';
   export default {
@@ -63,6 +64,7 @@
     data() {
       return {
         datas: [],
+        lunbo: [],
         panel1: false,
         panel2: false,
         nav: [
@@ -85,6 +87,9 @@
       // });
       get('/commodityCategory/selByParentId/0').then(res => {
         this.datas = res.data;
+      });
+      get('/shop/adver/getShowList').then(res => {
+        this.lunbo = res.data;
       });
     },
     computed: {

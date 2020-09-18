@@ -20,9 +20,9 @@
       <span v-on:click="back">返回</span>
     </div>
     <div>
-      <el-form label-width="100px">
-        <el-form-item label="详情描述" v-model="orderBack.memo">
-          <el-input></el-input>
+      <el-form :model="orderBack" label-width="100px">
+        <el-form-item label="详情描述">
+          <el-input v-model="orderBack.memo"></el-input>
         </el-form-item>
         <el-form-item label="图片描述">
           <el-upload
@@ -49,7 +49,7 @@
             -->
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">提交</el-button>
+          <el-button @click="subBack(orderBack)" type="primary">提交</el-button>
           <el-button>重置</el-button>
         </el-form-item>
       </el-form>
@@ -95,10 +95,16 @@
       subBack() {
         this.orderItem.status = 2;
         if (this.id !== '') {
+          this.orderBack.orderNo = this.orderItem.orderNo;
+          this.orderBack.commodityId = this.orderItem.commodityId;
+          this.orderItem.status = 2;
           console.dir(this.orderBack);
-         /* post('/orderBack/insert', this.orderItem).then(res => {
+          post('/orderBack/insert', this.orderBack).then(res => {
             console.dir(res.data);
-          });*/
+          });
+          post('/orderItem/udp', this.orderItem).then(res => {
+            console.dir(res.data);
+          })
         }
       },
       back() {
@@ -106,6 +112,7 @@
       },
       /*----- 以下为常用处理代码 ------*/
       handleSuccess(response, file, fileList) {
+        this.orderBack.img = response.data;
         console.dir(response);
         console.log("上传成功");
       },

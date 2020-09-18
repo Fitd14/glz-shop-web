@@ -318,7 +318,7 @@
         this.currentPage = val;    //动态改变
       },
       unpay(userId, payStatus) {
-        axios.get(url + '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
+        get( '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
           console.dir(res)
           this.datas = res.data;
           this.totalNum = this.datas.length;
@@ -326,7 +326,7 @@
         });
       },
       getStatus(userId, status) {
-        axios.get(url + '/order/status?userId=' + userId + '&status=' + status).then(res => {
+        get( '/order/status?userId=' + userId + '&status=' + status).then(res => {
           this.datas = res.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
@@ -345,7 +345,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.get(url + '/order/del/' + row.orderNo).then(res => {
+
+          get('/order/del/' + row.orderNo).then(res => {
             if (res.data.code === '200') {
               this.reload();
               console.dir('success');

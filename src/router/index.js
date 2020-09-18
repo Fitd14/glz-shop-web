@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Index from '@/components/Index';
 import store from '../common/store';
 import stores from '../common/store';
+
 const Login = resolve => require(['@/components/Login'], resolve);
 const SignUp = resolve => require(['@/components/SignUp'], resolve);
 const CheckPhone = resolve => require(['@/components/signUp/CheckPhone'], resolve);
@@ -21,6 +22,8 @@ const MyUserInfo = resolve => require(['@/components/home/MyUserInfo'], resolve)
 const OrderItem = resolve => require(['@/components/home/OrderItem'], resolve);
 const AddAddress = resolve => require(['@/components/home/AddAddress'], resolve);
 const MyOrder = resolve => require(['@/components/home/MyOrder'], resolve);
+const MyCollect = resolve => require(['@/components/home/MyCollect'], resolve);
+const OrderBack = resolve => require(['@/components/home/OrderBack'], resolve);
 const MyShoppingCart = resolve => require(['@/components/home/MyShoppingCart'], resolve);
 const Merchant = resolve => require(['@/components/Merchant'], resolve);
 
@@ -80,7 +83,7 @@ const router = new Router({
       component: GoodsDetail
     },
     {
-      path: '/shoppingCart', // 商品详情
+      path: '/shoppingCart/:id', // 商品详情
       name: 'ShoppingCart',
       component: ShoppingCart
     },
@@ -136,6 +139,12 @@ const router = new Router({
           component: OrderItem
         },
         {
+          path: 'orderBack',
+          name: 'OrderBack',
+          meta: {requireAuth: true},
+          component: OrderBack
+        },
+        {
           path: 'addAddress',
           name: 'AddAddress',
           meta: {requireAuth: true},
@@ -155,6 +164,12 @@ const router = new Router({
           meta: {
             keepAlive: true
           }*/
+          meta: {requireAuth: true},
+        },
+        {
+          path: 'myCollect',
+          name: 'MyCollect',
+          component: MyCollect,
           meta: {requireAuth: true},
         },
         {
