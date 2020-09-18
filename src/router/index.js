@@ -80,7 +80,7 @@ const router = new Router({
       component: GoodsDetail
     },
     {
-      path: '/shoppingCart', // 商品详情
+      path: '/shoppingCart/:id', // 商品详情
       name: 'ShoppingCart',
       component: ShoppingCart
     },

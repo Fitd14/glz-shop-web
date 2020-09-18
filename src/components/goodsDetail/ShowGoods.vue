@@ -120,7 +120,6 @@
   import global_variable from "../../common/global_variable";
   import {getUserInfo} from "../../vuex/actions";
 
-  const url = 'http://localhost:80';
   export default {
     name: 'ShowGoods',
     data() {
@@ -174,6 +173,9 @@
       }
     },
     created() {
+      getUserInfo().then(res => {
+        this.userId = res.data.userId;
+      });
       this.commodityId = this.$route.query.commodityId
       global_variable.setCid('1303874819187662849');
       get('/commodityAttribute/sel', {id: 50}).then(res => {
@@ -192,11 +194,14 @@
       showBigImg(index) {
         this.imgIndex = index;
       },
-      addShopCart(cart) {
+      addShopCart() {
         this.cartDemo.id = this.commondity.id;
-        console.dir(this.cartDemo);
-        post('url + /cart/add').then(res => {
-          console.dir(res.data);
+        post('/cart/add?userId='+this.userId+'&commodityId='+this.commondity.id+'&commodityCount='+this.cartDemo.commodityCount).then(res => {
+          if(res.code === '200'){
+            this.$router.push('/order/' + this.commondity.id);
+          }else{
+            alert('加入购物车失败！');
+          }
         })
       },
       addShoppingCartBtn() {
