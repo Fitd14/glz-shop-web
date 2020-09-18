@@ -11,6 +11,7 @@ import moment from 'vue-moment';
 import VDistpicker from 'v-distpicker';
 import store from './vuex/store';
 import stores from './common/store';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(ElementUI);
@@ -20,12 +21,6 @@ Vue.use(require('vue-moment'));
 
 Vue.config.productionTip = false;
 Vue.prototype.moment = moment;
-Vue.filter('dateFormat', function(dateStr, pattern = 'YYYY-MM-DD') {
-  return moment(dateStr).format(pattern);
-});
-Vue.filter('moneyFormat', function(money, pattern = '¥') {
-  return moment(money).format(pattern + money);
-});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
