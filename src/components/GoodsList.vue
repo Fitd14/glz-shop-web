@@ -49,7 +49,7 @@
           <div class="goods-list">
             <div class="goods-show-info" v-for="(item, index) in goodList" :key="index">
               <div class="goods-show-img">
-                <router-link to="{path:'/goodsDetail',query:{id:items.id}}"><img :src="item.photo" width="280px" height="160px"/></router-link>
+                <router-link :to="{path:'/goodsDetail',query:{id:item.id}}"><img :src="item.photo" width="220px" /></router-link>
               </div>
               <div class="goods-show-price">
                 <span>
@@ -130,7 +130,7 @@ export default {
     get('/commodity/category?category=' + this.filters.id).then(res => {
       this.goodList = res.data;
     });
-    this.loadGoodsList();
+    // this.loadGoodsList();
   },
   mounted () {
     this.searchItem = this.$route.query.sreachData;
@@ -249,6 +249,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  float: left;
 }
 .goods-show-info{
   width: 240px;

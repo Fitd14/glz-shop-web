@@ -118,12 +118,15 @@
   import axios from "axios";
   import {get, post} from "../../service/http.service";
   import global_variable from "../../common/global_variable";
+  import {getUserInfo} from "../../vuex/actions";
 
   const url = 'http://localhost:80';
   export default {
     name: 'ShowGoods',
     data() {
       return {
+        userId: '',
+        commodityId: '',
         cartDemo: {
           userId: '',
           commodityId: '',
@@ -171,6 +174,7 @@
       }
     },
     created() {
+      this.commodityId = this.$route.query.commodityId
       global_variable.setCid('1303874819187662849');
       get('/commodityAttribute/sel', {id: 50}).then(res => {
         console.dir(res.data);
