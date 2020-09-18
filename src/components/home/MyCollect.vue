@@ -156,7 +156,7 @@
             }*/
             //未封装调用方法
           this.$http.delete(url + 'shop/delete/' + row.id).then(res => {
-            if (res.data.code === '200') {
+            if (res === 1) {
               this.reload();
               console.dir('success');
             }
