@@ -21,9 +21,9 @@
           <FormItem label="邮箱" prop="email">
             <i-input v-model="formData.email" size="large"></i-input>
           </FormItem>
-          <FormItem label="生日" prop="birthday">
-            <el-date-picker v-model="formData.birthday" type="date" placeholder="选择日期" size="large" ></el-date-picker>
-          </FormItem>
+<!--          <FormItem label="生日" prop="birthday">-->
+<!--            <el-date-picker v-model="formData.birthday" type="date" placeholder="选择日期" size="large" ></el-date-picker>-->
+<!--          </FormItem>-->
         </Form>
       </div>
       <div class="add-submit">
@@ -71,12 +71,9 @@
             this.formData.gender = 1
         }
         put("/user/member/modify/info",this.formData).then(resp=>{
-            if(resp.code === '200'){
-                this.$message.success('修改成功');
-            }
-            this.$message.error('修改失败');
+          this.$message.success('修改成功');
+          this.getData();
         })
-        this.getData();
       },
       getData(dat) {
         getUserInfo().then(res => {

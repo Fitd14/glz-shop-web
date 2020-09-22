@@ -138,7 +138,7 @@
 
 
       getData(row) {
-        this.$router.push({name: 'GoodsDetail', query: {comId: row.comId}})
+        this.$router.push({name: 'GoodsDetail', query: {comId: row}})
       },
 
 
@@ -155,10 +155,9 @@
               console.dir('success');
             }*/
             //未封装调用方法
-          this.$http.delete(url + 'shop/delete/' + row.id).then(res => {
+          get('shop/collect/delete/' + row.id).then(res => {
             if (res === 1) {
               this.reload();
-              console.dir('success');
             }
           });
         });

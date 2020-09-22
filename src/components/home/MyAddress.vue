@@ -106,9 +106,9 @@
           type: 'warning'
         }).then(() => {
           get('/ship/area/del/' + row.id).then(res => {
-            if (res.data.code === '200') {
+            if (res.code === '200') {
               this.reload();
-              console.dir('success');
+              this.$message.success("删除成功");
             }
           });
         });

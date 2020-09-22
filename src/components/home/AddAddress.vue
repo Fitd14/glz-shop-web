@@ -122,11 +122,13 @@
                 message: '恭喜你，更新成功',
                 type: 'success'
               });
+              this.$router.push({name: 'MyAddress'});
             } else {
               this.$message({
                 message: '恭喜你，添加成功',
                 type: 'success'
               });
+              this.$router.push({name: 'MyAddress'});
             }
           });
         } else {

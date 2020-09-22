@@ -131,14 +131,7 @@
       ...mapState(['goodsInfo'])
     },
     created() {
-      console.dir('//////////////////')
-      console.dir(global_variable.cid);
       this.goods = global_variable.goods;
-      console.dir('***************************')
-      console.dir(this.goods);
-      /*  get('/commodity/selectOne/' + config.cid).then(res => {
-          this.goods = res.data;
-        })*/
     },
     methods: {
       changeHeight() {

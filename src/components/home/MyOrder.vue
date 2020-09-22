@@ -35,10 +35,10 @@
       <div class="searchBox">
 
         <div>
-          <el-button type="text" @click="unpay(1,0)">未支付</el-button>
-          <el-button type="text" @click="unpay(1,1)">已支付</el-button>
-          <el-button type="text" @click="getStatus(1,0)">未发货</el-button>
-          <el-button type="text" @click="getStatus(1,1)">已发货</el-button>
+          <el-button type="text" @click="unpay(userId,0)">未支付</el-button>
+          <el-button type="text" @click="unpay(userId,1)">已支付</el-button>
+          <el-button type="text" @click="getStatus(userId,0)">未发货</el-button>
+          <el-button type="text" @click="getStatus(userId,1)">已发货</el-button>
           <el-button type="text" @click="begin()">重置</el-button>
           <el-input size="mini" v-model="tableDataName" placeholder="请输入订单编号" style="width:240px"></el-input>
           <el-button type="primary" size="mini" @click="doFilter">搜索</el-button>
@@ -67,6 +67,7 @@
         <el-table-column prop="province" label="省份"></el-table-column>
         <el-table-column prop="city" label="城市"></el-table-column>
         <el-table-column prop="region" label="收货地区"></el-table-column>
+        <el-table-column prop="memo" label="备注"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="updateTime" label="更新时间"></el-table-column>
         <el-table-column label="操作" width="150px" fixed="right">
@@ -105,7 +106,7 @@
 
   const url = 'http://localhost:80';
   export default {
-    inject: ['reload'],
+    inject:['reload'],
     name: 'MyOrder',
     data() {
       return {
@@ -339,19 +340,18 @@
 
 
       delOrder(row) {
-        console.log(row.orderNo);
         this.$confirm('是否要删除', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-
           get('/order/del/' + row.orderNo).then(res => {
+            console.dir(res);
             if (res.data.code === '200') {
-              this.reload();
               console.dir('success');
             }
           });
+          this.reload();
         });
       }
     }
