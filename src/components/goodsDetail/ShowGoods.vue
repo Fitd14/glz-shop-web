@@ -104,11 +104,10 @@
 <script>
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
-  import axios from "axios";
+  import axios from 'axios';
   import {getUserInfo} from '../../vuex/actions';
-  import {get, post} from "../../service/http.service";
-  import global_variable from "../../common/global_variable";
-
+  import {get, post} from '../../service/http.service';
+  import global_variable from '../../common/global_variable';
 
   export default {
     name: 'ShowGoods',
@@ -119,7 +118,7 @@
         cartDemo: {
           userId: '',
           commodityId: '',
-          commodityCount: '',
+          commodityCount: ''
         },
         radio1: '',
         tempUrl: '',
@@ -128,7 +127,10 @@
         price: 0,
         count: 1,
         selectBoxIndex: 0,
-        imgIndex: 0
+        imgIndex: 0,
+        fileter: {
+          id: ''
+        }
       };
     },
     computed: {
@@ -166,14 +168,21 @@
       getUserInfo().then(res => {
         this.userId = res.data.userId;
       });
-      this.commodityId = this.$route.query.commodityId
+      this.commodityId = this.$route.query.comId;
       global_variable.setCid('1303874819187662849');
-      get('/commodityAttribute/sel', {id: 50}).then(res => {
-        console.dir(res.data);
-        this.colorBox = res.data.inputList.split(",");
-        console.dir(this.colorBox)
-      });
-      this.getOneGoods(global_variable.cid);
+      // get('/commodityAttribute/sel', {id: 50}).then(res => {
+      //   console.dir(res.data);
+      //   this.colorBox = res.data.inputList.split(',');
+      //   console.dir(this.colorBox);
+      // });
+      this.fileter.id = this.$route.query.id;
+      if (this.fileter.id != null) {
+        console.log(this.fileter.id);
+        this.getOneGoods(this.fileter.id);
+      } else {
+        console.log(this.commodityId);
+        this.getOneGoods(this.commodityId);
+      }
     },
     methods: {
       ...mapActions(['addShoppingCart']),
@@ -184,15 +193,36 @@
       showBigImg(index) {
         this.imgIndex = index;
       },
+      addCollect() {
+        getUserInfo().then(res => {
+          this.userId = res.data.userId;
+          get("/shop/collect/create/"+this.commondity.id+"/"+this.userId).then(res=>{
+            if (res ===1){
+              this.$Message.success("添加成功")
+            }
+          })
+        });
+
+      },
       addShopCart() {
         this.cartDemo.id = this.commondity.id;
-        post('/cart/add?userId='+this.userId+'&commodityId='+this.commondity.id+'&commodityCount='+this.cartDemo.commodityCount).then(res => {
-          if(res.code === '200'){
+        post('/cart/add?userId=' + this.userId + '&commodityId=' + this.commondity.id + '&commodityCount=' + this.cartDemo.commodityCount).then(res => {
+          if (res.code === '200') {
             this.$router.push('/order/' + this.commondity.id);
-          }else{
+          } else {
             alert('加入购物车失败！');
           }
-        })
+        });
+      },
+      addCollect() {
+        getUserInfo().then(res => {
+          this.userId = res.data.userId;
+          get('/shop/collect/create/' + this.commondity.id + '/' + this.userId).then(res => {
+            if (res === 1) {
+              this.$Message.success('添加成功');
+            }
+          });
+        });
       },
       addShoppingCartBtn() {
         const index1 = parseInt(this.selectBoxIndex / 3);
@@ -211,12 +241,12 @@
       getOneGoods(ids) {
         get('/commodity/selectOne/' + ids).then(res => {
           this.commondity = res.data;
-          console.dir('-----------------')
+          console.dir('-----------------');
           console.dir(this.commondity);
           this.tempUrl = 'http://192.168.115.58:4396//0aab0461d7b041e6aaa40608002f4548.jpg';
           console.dir(this.tempUrl);
           global_variable.setGoods(this.commondity);
-        })
+        });
       }
     },
     mounted() {

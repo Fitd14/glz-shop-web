@@ -45,7 +45,7 @@
       </div>
       <div class="remarks-container">
         <h3>备注</h3>
-        <i-input v-model="remarks" size="large" placeholder="在这里填写备注信息" class="remarks-input"></i-input>
+        <i-input v-model="orderDTO.memo" size="large" placeholder="在这里填写备注信息" class="remarks-input"></i-input>
       </div>
       <div class="invoices-container">
         <h3>发票信息</h3>
@@ -58,9 +58,9 @@
             </span>
           </p>
           <div class="pay-btn">
-            <router-link to="/pay">
-              <Button type="error" @click="addOrder(orderDTO)" size="large">支付订单</Button>
-            </router-link>
+              <Button type="error" @click="addOrder(0)" size="large">提交订单</Button>
+              &nbsp  &nbsp  &nbsp  &nbsp
+              <Button type="error" @click="addOrder(1)" size="large">支付订单</Button>
           </div>
         </div>
       </div>
@@ -125,7 +125,9 @@
         orderDTO: {
           userId: '',
           cids: [],
-          shipId: ''
+          shipId: '',
+          paymentStatus: 0,
+          memo: ''
         },
         userName: 'ez',
         shipAddress: [],
@@ -195,10 +197,23 @@
     methods: {
       ...mapActions(['loadAddress']),
       addOrder(val) {
-        post('/order/add', val).then(res => {
-          console.dir(res.data);
-        })
-        console.dir('success' + val.userId + val.cids + val.shipId)
+        this.$confirm('是否要生成此此订单', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          if (val === 1) {
+            this.orderDTO.paymentStatus = 1;
+          }
+          console.dir(this.orderDTO);
+          post('/order/add', this.orderDTO).then(res => {
+            console.dir(res.data);
+            this.$router.push({
+              path: `/home`
+            });
+          });
+          console.dir('success');
+        });
       },
       select(selection, row) {
         console.log(selection);
@@ -239,7 +254,7 @@
         })
       },
       getCart(userId) {
-        post('/cart/add?userId=1&commodityId=e24b99842acc40019b44ffad63743ad4&commodityCount=2');
+        // post('/cart/add?userId=1&commodityId=e24b99842acc40019b44ffad63743ad4&commodityCount=2');
         get('/cart/list/batch?userId=' + userId + '&commodityIds=' + this.$route.params.ids).then(res => {
           this.datas = res.data;
           console.dir(res.data);

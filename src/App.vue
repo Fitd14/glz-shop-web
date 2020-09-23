@@ -32,11 +32,6 @@
       Footer,
       Message
     },
-    provide() {
-      return {
-        reload: this.reload
-      };
-    },
     methods: {
       reload() {
         this.isRouterAlive = false;
@@ -44,6 +39,11 @@
           this.isRouterAlive = true;
         });
       }
+    },
+    provide() {
+      return {
+        reload: this.reload
+      };
     }
   };
 </script>

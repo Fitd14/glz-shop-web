@@ -17,7 +17,7 @@
     </el-form>-->
   <div>
     <div class="backTo">
-      <span v-on:click="back">返回</span>
+      <el-button v-on:click="back">返回</el-button>
     </div>
     <div>
       <el-form :model="orderBack" label-width="100px">
@@ -101,6 +101,7 @@
           console.dir(this.orderBack);
           post('/orderBack/insert', this.orderBack).then(res => {
             console.dir(res.data);
+            this.$message.success("申请退货成功");
           });
           post('/orderItem/udp', this.orderItem).then(res => {
             console.dir(res.data);
