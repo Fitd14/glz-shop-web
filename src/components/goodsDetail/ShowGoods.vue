@@ -214,16 +214,6 @@
           }
         });
       },
-      addCollect() {
-        getUserInfo().then(res => {
-          this.userId = res.data.userId;
-          get('/shop/collect/create/' + this.commondity.id + '/' + this.userId).then(res => {
-            if (res === 1) {
-              this.$Message.success('添加成功');
-            }
-          });
-        });
-      },
       addShoppingCartBtn() {
         const index1 = parseInt(this.selectBoxIndex / 3);
         const index2 = this.selectBoxIndex % 3;
