@@ -165,6 +165,9 @@
       }
     },
     created() {
+      getUserInfo().then(res=>{
+        this.userId = res.data.userId;
+      });
       this.commodityId = this.$route.query.comId;
       global_variable.setCid('1303874819187662849');
       // get('/commodityAttribute/sel', {id: 50}).then(res => {

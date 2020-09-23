@@ -740,7 +740,8 @@ export const login = ({commit}, data) => {
 // 退出登陆
 export const signOut = ({commit}) => {
   localStorage.removeItem('loginInfo');
-  commit('SET_USER_LOGIN_INFO', {});
+  // commit('SET_USER_LOGIN_INFO', {});
+  sessionStorage.removeItem('token');
   post('/logout');
 };
 
