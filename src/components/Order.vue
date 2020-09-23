@@ -4,7 +4,7 @@
     <GoodsListNav></GoodsListNav>
     <div class="goods-list-container">
       <Table border ref="selection" :columns="columns" :data="this.datas" size="large" @on-selection-change="select"
-        no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
+             no-data-text="您的购物车没有商品，请先添加商品到购物车再点击购买">
       </Table>
       <div class="address-container">
         <h3>收货人信息</h3>
@@ -58,9 +58,9 @@
             </span>
           </p>
           <div class="pay-btn">
-              <Button type="error" @click="addOrder(0)" size="large">提交订单</Button>
-              &nbsp  &nbsp  &nbsp  &nbsp
-              <Button type="error" @click="addOrder(1)" size="large">支付订单</Button>
+            <Button type="error" @click="addOrder(0)" size="large">提交订单</Button>
+            &nbsp &nbsp &nbsp &nbsp
+            <Button type="error" @click="addOrder(1)" size="large">支付订单</Button>
           </div>
         </div>
       </div>
@@ -99,6 +99,7 @@
         this.userId = this.user.userId;
         this.getShipAddress(this.userId);
         this.orderDTO.userId = this.userId;
+        this.orderDTO.userName = this.user.userName;
         this.getCart(this.userId);
       });
     },
@@ -127,32 +128,33 @@
           cids: [],
           shipId: '',
           paymentStatus: 0,
-          memo: ''
+          memo: '',
+          userName: ''
         },
-        userName: 'ez',
+        userName: '',
         shipAddress: [],
         datas: [],
         tp: '',
         item: null,
         columns: [{
-            title: '图片',
-            key: 'commodityImg',
-            width: 130,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('img', {
-                  attrs: {
-                    src: params.row.commodityImg
-                  },
-                  style: {
-                    width: '100px',
-                    height: '80px'
-                  }
-                })
-              ]);
-            },
+          title: '图片',
+          key: 'commodityImg',
+          width: 130,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('img', {
+                attrs: {
+                  src: params.row.commodityImg
+                },
+                style: {
+                  width: '100px',
+                  height: '80px'
+                }
+              })
+            ]);
           },
+        },
           {
             title: '标题',
             key: 'commodityName',
@@ -197,23 +199,27 @@
     methods: {
       ...mapActions(['loadAddress']),
       addOrder(val) {
-        this.$confirm('是否要生成此此订单', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (val === 1) {
-            this.orderDTO.paymentStatus = 1;
-          }
-          console.dir(this.orderDTO);
-          post('/order/add', this.orderDTO).then(res => {
-            console.dir(res.data);
-            this.$router.push({
-              path: `/home`
+        if (this.orderDTO.userId !== '' && this.orderDTO.userName !== null) {
+          this.$confirm('是否要生成此此订单', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if (val === 1) {
+              this.orderDTO.paymentStatus = 1;
+            }
+            console.dir(this.orderDTO);
+            post('/order/add', this.orderDTO).then(res => {
+              console.dir(res.data);
+              this.$router.push({
+                path: `/home`
+              });
             });
+            console.dir('success');
           });
-          console.dir('success');
-        });
+        } else {
+          this.$router.push("/Login")
+        }
       },
       select(selection, row) {
         console.log(selection);
@@ -260,9 +266,10 @@
           console.dir(res.data);
           this.tp = 0;
           for (let i = 0; i < this.datas.length; i++) {
-            this.tp+=this.datas[i].totalPrice;
+            this.tp += this.datas[i].totalPrice;
             this.orderDTO.cids.push(this.datas[i].cartId);
-          };
+          }
+          ;
         })
       }
     },

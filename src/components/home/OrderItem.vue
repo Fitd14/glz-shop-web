@@ -10,9 +10,9 @@
                 stripe border style="width: 100%">
         <el-table-column v-if="false" prop="id" label="ID" width="180"></el-table-column>
         <el-table-column v-if="false" prop="orderNo" label="订单号" width="180"></el-table-column>
-        <el-table-column v-if="false" prop="userId" label="用户ID"></el-table-column>
+       <!-- <el-table-column v-if="false" prop="userId" label="用户ID"></el-table-column>-->
         <el-table-column v-if="false" prop="memo" label="描述"></el-table-column>
-        <el-table-column prop="commodityId" label="商品ID"></el-table-column>
+       <!-- <el-table-column prop="commodityId" label="商品ID"></el-table-column>-->
         <el-table-column prop="commoditySubHead" label="商品名称"></el-table-column>
         <el-table-column prop="img" label="商品图片">
           <template slot-scope="scope">

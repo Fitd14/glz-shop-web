@@ -6,12 +6,12 @@
           <!--  <img :src="goodsInfo.goodsImg[imgIndex]" alt="">-->
           <img :src="commondity.photo" alt="">
         </div>
-        <div class="item-detail-img-row">
+      <!--  <div class="item-detail-img-row">
           <div class="item-detail-img-small" v-for="(item, index) in goodsInfo.goodsImg" :key="index"
                @mouseover="showBigImg(index)">
             <img :src="item" alt="">
           </div>
-        </div>
+        </div>-->
       </div>
       <div class="item-detail-right">
         <div class="item-detail-title">
@@ -57,7 +57,7 @@
           </div>
         </div>
         <!-- 选择颜色 -->
-        <div class="item-select">
+       <!-- <div class="item-select">
           <div class="item-select-title">
             <p>选择颜色</p>
           </div>
@@ -74,9 +74,9 @@
               </div>
             </div>
           </div>
-          <!-- <div>
+          &lt;!&ndash; <div>
              <el-radio v-model="radio1" :key="item" v-for="item in colorBox" label="1" border>备选项1</el-radio>
-           </div>-->
+           </div>&ndash;&gt;
           <div class="item-select-column">
             <div class="item-select-row" v-for="item in colorBox" :key="index">
               <div class="item-select-box">
@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
 
         <br>
         <div class="add-buy-car-box">
@@ -118,7 +118,7 @@
         cartDemo: {
           userId: '',
           commodityId: '',
-          commodityCount: ''
+          commodityCount: 1
         },
         radio1: '',
         tempUrl: '',
@@ -202,7 +202,6 @@
             }
           })
         });
-
       },
       addShopCart() {
         this.cartDemo.id = this.commondity.id;
@@ -212,16 +211,6 @@
           } else {
             alert('加入购物车失败！');
           }
-        });
-      },
-      addCollect() {
-        getUserInfo().then(res => {
-          this.userId = res.data.userId;
-          get('/shop/collect/create/' + this.commondity.id + '/' + this.userId).then(res => {
-            if (res === 1) {
-              this.$Message.success('添加成功');
-            }
-          });
         });
       },
       addShoppingCartBtn() {

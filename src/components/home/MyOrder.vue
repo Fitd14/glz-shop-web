@@ -33,44 +33,51 @@
   <div>
     <div>
       <div class="searchBox">
-
-        <div>
-          <el-button type="text" @click="unpay(userId,0)">未支付</el-button>
-          <el-button type="text" @click="unpay(userId,1)">已支付</el-button>
-          <el-button type="text" @click="getStatus(userId,0)">未发货</el-button>
-          <el-button type="text" @click="getStatus(userId,1)">已发货</el-button>
-          <el-button type="text" @click="begin()">重置</el-button>
-          <el-input size="mini" v-model="tableDataName" placeholder="请输入订单编号" style="width:240px"></el-input>
-          <el-button type="primary" size="mini" @click="doFilter">搜索</el-button>
-        </div>
+        <el-button size="mini" type="text" @click="unpay(userId,0)">未支付</el-button>
+        <el-button size="mini" type="text" @click="unpay(userId,1)">已支付</el-button>
+        <el-button size="mini" type="text" @click="getStatus(userId,0)">未发货</el-button>
+        <el-button size="mini" type="text" @click="getStatus(userId,1)">已发货</el-button>
+        <el-button size="mini" type="text" @click="begin()">重置</el-button>
+        <el-input size="mini" v-model="tableDataName" placeholder="请输入订单编号" style="width:240px"></el-input>
+        <el-button type="primary" size="mini" @click="doFilter">搜索</el-button>
       </div>
       <el-table border
+                :header-cell-style="{'text-align':'center'}"
                 :data="tableDataEnd.slice((currentPage-1)* pageSize,currentPage* pageSize)"
-                stripe style="width: 100%;" height='550px' ref="multipleTable">
-        <el-table-column prop="orderNo" label="订单编号">
+                stripe style="width: 100%;" ref="multipleTable">
+        <el-table-column align="center" prop="orderNo" label="订单编号">
         </el-table-column>
-        <el-table-column v-if="false" prop="userId" label="用户ID">
-        </el-table-column>
-        <el-table-column prop="payment" label="总价"></el-table-column>
-        <el-table-column prop="status" label="发货状态">
+        <!-- <el-table-column align="center" v-if="false" prop="userId" label="用户ID">
+         </el-table-column>-->
+        <!--  <el-table-column prop="userName" label="用户">
+          </el-table-column>-->
+        <el-table-column align="center" prop="payment" label="总价"></el-table-column>
+        <el-table-column align="center" prop="status" label="发货状态">
           <template slot-scope="scope">
             <div v-text="changeStatus(scope.row.status)"></div>
           </template>
         </el-table-column>
-        <el-table-column prop="paymentStatus" label="支付状态">
+        <el-table-column align="center" prop="paymentStatus" label="支付状态">
           <template slot-scope="scope">
             <div v-text="setPaymentStatus(scope.row.paymentStatus)"></div>
           </template>
         </el-table-column>
-        <el-table-column prop="shipName" label="收件人"></el-table-column>
-        <el-table-column prop="phone" label="联系方式"></el-table-column>
-        <el-table-column prop="province" label="省份"></el-table-column>
-        <el-table-column prop="city" label="城市"></el-table-column>
-        <el-table-column prop="region" label="收货地区"></el-table-column>
-        <el-table-column prop="memo" label="备注"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" label="更新时间"></el-table-column>
-        <el-table-column label="操作" width="150px" fixed="right">
+        <el-table-column align="center" prop="shipName" label="收件人"></el-table-column>
+        <el-table-column prop="phone" align="center" label="联系方式"></el-table-column>
+        <el-table-column prop="province" v-if="false" align="center" label="省份"></el-table-column>
+        <el-table-column prop="city" v-if="false" align="center" label="城市"></el-table-column>
+        <el-table-column prop="region" v-if="false" align="center" label="收货地区"></el-table-column>
+
+        <el-table-column prop="detailAddress" align="center" label="收货地区">
+          <template slot-scope="scope">
+            <div v-text="scope.row.province + scope.row.city + scope.row.region"></div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="memo" label="备注" align="center"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center"></el-table-column>
+        <!--<el-table-column prop="updateTime" label="更新时间" align="center"></el-table-column>-->
+        <el-table-column label="操作" align="center" width="150px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini" @click="getData(scope.row)">
@@ -106,7 +113,7 @@
 
   const url = 'http://localhost:80';
   export default {
-    inject:['reload'],
+    inject: ['reload'],
     name: 'MyOrder',
     data() {
       return {
@@ -319,7 +326,7 @@
         this.currentPage = val;    //动态改变
       },
       unpay(userId, payStatus) {
-        get( '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
+        get('/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
           console.dir(res)
           this.datas = res.data;
           this.totalNum = this.datas.length;
@@ -327,7 +334,7 @@
         });
       },
       getStatus(userId, status) {
-        get( '/order/status?userId=' + userId + '&status=' + status).then(res => {
+        get('/order/status?userId=' + userId + '&status=' + status).then(res => {
           this.datas = res.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
@@ -368,6 +375,6 @@
   }
 
   .searchBox {
-    margin-left: 75%;
+    margin-left: 5%;
   }
 </style>
