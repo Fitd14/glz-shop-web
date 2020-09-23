@@ -105,7 +105,7 @@
   import store from '@/vuex/store';
   import {mapState, mapActions} from 'vuex';
   import axios from 'axios';
-  import {getUserInfo} from '../../vuex/actions';
+  import {getUserInfo, isLogin} from '../../vuex/actions';
   import {get, post} from '../../service/http.service';
   import global_variable from '../../common/global_variable';
 
@@ -165,9 +165,6 @@
       }
     },
     created() {
-      getUserInfo().then(res => {
-        this.userId = res.data.userId;
-      });
       this.commodityId = this.$route.query.comId;
       global_variable.setCid('1303874819187662849');
       // get('/commodityAttribute/sel', {id: 50}).then(res => {
@@ -194,9 +191,8 @@
         this.imgIndex = index;
       },
       addCollect() {
-        getUserInfo().then(res => {
-          this.userId = res.data.userId;
-          if (this.userId == null) {
+        var login = isLogin();
+          if (login == null) {
             this.$router.push('/Login');
           } else {
           get('/shop/collect/create/' + this.commondity.id + '/' + this.userId).then(res => {
@@ -205,12 +201,10 @@
             }
           });
           }
-        });
       },
       addShopCart() {
-        getUserInfo().then(res => {
-          this.userId = res.data.userId;
-          if (this.userId == null) {
+        var login = isLogin();
+          if (login == null) {
             this.$router.push('/Login');
           } else {
             post('/cart/add?userId=' + this.userId + '&commodityId=' + this.commondity.id + '&commodityCount=' + this.cartDemo.commodityCount).then(res => {
@@ -221,7 +215,6 @@
               }
             });
           }
-        });
       },
       addShoppingCartBtn() {
         const index1 = parseInt(this.selectBoxIndex / 3);

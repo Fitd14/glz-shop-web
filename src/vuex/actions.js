@@ -745,7 +745,7 @@ export const signOut = ({commit}) => {
 };
 
 // 判断是否登陆
-export const isLogin = ({commit}) => {
+export const isLogin = () => {
   const user = localStorage.getItem('loginInfo');
   if (user !== null) {
     // commit('SET_USER_LOGIN_INFO', JSON.parse(user));
