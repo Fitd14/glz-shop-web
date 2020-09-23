@@ -51,7 +51,7 @@
               <Col span="6" v-for="(item, index) in goodList" :key="index">
                 <div class="goods-show-img">
                   <router-link :to="{path:'/goodsDetail',query:{id:item.id}}">
-                    <img :src="item.photo" width="220px" />
+                    <img :src="item.photo" width="220px" height="180px" />
                   </router-link>
                 </div>
                 <div class="goods-show-price">
@@ -63,36 +63,11 @@
                 <div class="goods-show-detail">
                   <span>{{item.commoditySubHead}}</span>
                 </div>
-                <!--<div class="goods-show-num">
-                  剩余<span>{{item.remarks}}</span>人评价
-                </div>-->
                 <div class="goods-show-seller">
                   <span>{{item.commodityName}}</span>
                 </div>
               </Col>
-
-<!--            <div class="goods-show-info" v-for="(item, index) in goodList" :key="index">-->
-<!--              <div class="goods-show-img">-->
-<!--                <router-link :to="{path:'/goodsDetail',query:{id:item.id}}"><img :src="item.photo" width="220px" /></router-link>-->
-<!--              </div>-->
-<!--              <div class="goods-show-price">-->
-<!--                <span>-->
-<!--                  <Icon type="social-yen text-danger"></Icon>-->
-<!--                  <span class="seckill-price text-danger">{{item.price}}</span>-->
-<!--                </span>-->
-<!--              </div>-->
-<!--              <div class="goods-show-detail">-->
-<!--                <span>{{item.commoditySubHead}}</span>-->
-<!--              </div>-->
-<!--              &lt;!&ndash;<div class="goods-show-num">-->
-<!--                剩余<span>{{item.remarks}}</span>人评价-->
-<!--              </div>&ndash;&gt;-->
-<!--              <div class="goods-show-seller">-->
-<!--                <span>{{item.commodityName}}</span>-->
-<!--              </div>-->
-<!--            </div>-->
             </row>
-<!--          </div>-->
         </div>
       </div>
       <div class="goods-page">
@@ -119,6 +94,7 @@ export default {
   },
   data () {
     return {
+      seldata: [],
       filters: {
         id: ''
       },
@@ -150,11 +126,16 @@ export default {
     }
   },
   created () {
-    this.filters.id = this.$route.query.id;
-    console.log(this.filters.id);
-    get('/commodity/category?category=' + this.filters.id).then(res => {
-      this.goodList = res.data;
-    });
+    if (this.$route.query.id != null){
+      this.filters.id = this.$route.query.id;
+      get('/commodity/category?category=' + this.filters.id).then(res => {
+        this.goodList = res.data;
+      });
+    }
+    if (this.$route.params.seldata != null) {
+      this.seldata = this.$route.params.seldata;
+      this.goodList = this.seldata;
+    }
     // 侧边栏广告
     this.loadGoodsList();
   },
