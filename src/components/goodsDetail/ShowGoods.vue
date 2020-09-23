@@ -196,20 +196,30 @@
       addCollect() {
         getUserInfo().then(res => {
           this.userId = res.data.userId;
-          get("/shop/collect/create/"+this.commondity.id+"/"+this.userId).then(res=>{
-            if (res ===1){
-              this.$Message.success("添加成功")
+          if (this.userId == null) {
+            this.$router.push('/Login');
+          } else {
+          get('/shop/collect/create/' + this.commondity.id + '/' + this.userId).then(res => {
+            if (res === 1) {
+              this.$Message.success('添加成功');
             }
-          })
+          });
+          }
         });
       },
       addShopCart() {
-        this.cartDemo.id = this.commondity.id;
-        post('/cart/add?userId=' + this.userId + '&commodityId=' + this.commondity.id + '&commodityCount=' + this.cartDemo.commodityCount).then(res => {
-          if (res.code === '200') {
-            this.$router.push('/order/' + this.commondity.id);
+        getUserInfo().then(res => {
+          this.userId = res.data.userId;
+          if (this.userId == null) {
+            this.$router.push('/Login');
           } else {
-            alert('加入购物车失败！');
+            post('/cart/add?userId=' + this.userId + '&commodityId=' + this.commondity.id + '&commodityCount=' + this.cartDemo.commodityCount).then(res => {
+              if (res.code === '200') {
+                this.$router.push('/order/' + this.commondity.id);
+              } else {
+                alert('加入购物车失败！');
+              }
+            });
           }
         });
       },
