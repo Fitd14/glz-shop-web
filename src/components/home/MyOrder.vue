@@ -64,11 +64,16 @@
         </el-table-column>
         <el-table-column prop="shipName" label="收件人"></el-table-column>
         <el-table-column prop="phone" label="联系方式"></el-table-column>
-        <el-table-column prop="province" label="省份"></el-table-column>
-        <el-table-column prop="city" label="城市"></el-table-column>
-        <el-table-column prop="region" label="收货地区"></el-table-column>
+        <el-table-column v-if="false" prop="province" label="省份"></el-table-column>
+        <el-table-column v-if="false" prop="city" label="城市"></el-table-column>
+        <el-table-column v-if="false" vprop="region" label="收货地区"></el-table-column>
+        <el-table-column prop="detailAddress" label="收货地区">
+          <template slot-scope="scope">
+            <div v-text="scope.row.province + scope.row.city + scope.row.region"></div>
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" label="更新时间"></el-table-column>
+        <el-table-column v-if="false" prop="updateTime" label="更新时间"></el-table-column>
         <el-table-column label="操作" width="150px" fixed="right">
           <template slot-scope="scope">
             <el-button
@@ -318,7 +323,7 @@
         this.currentPage = val;    //动态改变
       },
       unpay(userId, payStatus) {
-        get( '/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
+        get('/order/pay/status?userId=' + userId + '&payStatus=' + payStatus).then(res => {
           console.dir(res)
           this.datas = res.data;
           this.totalNum = this.datas.length;
@@ -326,7 +331,7 @@
         });
       },
       getStatus(userId, status) {
-        get( '/order/status?userId=' + userId + '&status=' + status).then(res => {
+        get('/order/status?userId=' + userId + '&status=' + status).then(res => {
           this.datas = res.data;
           this.totalNum = this.datas.length;
           this.tableDataEnd = this.datas;
