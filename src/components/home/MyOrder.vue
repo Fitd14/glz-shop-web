@@ -241,9 +241,7 @@
          this.order = res.data.data.data;
          this.tempPage();
        });*/
-
       this.begin();
-
     },
     computed: {},
     methods: {
@@ -279,7 +277,6 @@
             this.tableDataEnd = this.datas;
           });
         });
-
       },
       currentChangePage(list) {
         let from = (this.currentPage - 1) * this.pageSize;
@@ -303,8 +300,8 @@
         //每次手动将数据置空,因为会出现多次点击搜索情况
         this.filterTableDataEnd = []
         this.datas.forEach((value, index) => {
-          if (value.orderNo) {
-            if (value.orderNo.indexOf(this.tableDataName) >= 0) {
+          if (value.userName) {
+            if (value.userName.indexOf(this.tableDataName) >= 0) {
               this.filterTableDataEnd.push(value)
             }
           }
