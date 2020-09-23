@@ -5,19 +5,25 @@
     </div>
     <div>
       <el-table border
+                :header-cell-style="{'text-align':'center'}"
                 :data="datas.slice((currentPage-1)* pageSize,currentPage* pageSize)"
                 :current-page.sync="currentPage"
                 stripe style="width: 100%;" height='450px' ref="multipleTable">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column v-if="false" prop="id" label="ID"></el-table-column>
-        <el-table-column prop="name" label="收件人"></el-table-column>
-        <el-table-column prop="province" label="省"></el-table-column>
-        <el-table-column prop="city" label="市"></el-table-column>
-        <el-table-column prop="area" label="县"></el-table-column>
-        <el-table-column prop="region" label="收件地址"></el-table-column>
-        <el-table-column prop="phone" label="手机号码"></el-table-column>
-        <el-table-column prop="postCode" label="邮政编码"></el-table-column>
-        <el-table-column label="操作" width="200px" fixed="right">
+        <el-table-column align="center" type="selection" width="55"></el-table-column>
+        <el-table-column align="center" v-if="false" prop="id" label="ID"></el-table-column>
+        <el-table-column align="center" prop="name" label="收件人"></el-table-column>
+       <!-- <el-table-column align="center" prop="province" label="省"></el-table-column>
+        <el-table-column align="center" prop="city" label="市"></el-table-column>
+        <el-table-column prop="area" align="center" label="县"></el-table-column>
+        <el-table-column prop="region" align="center" label="收件地址"></el-table-column>-->
+        <el-table-column prop="detailAddress" align="center" label="收货地区">
+          <template slot-scope="scope">
+            <div v-text="scope.row.province + scope.row.city + scope.row.region"></div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" align="center" label="手机号码"></el-table-column>
+        <el-table-column prop="postCode" align="center" label="邮政编码"></el-table-column>
+        <el-table-column align="center" label="操作" width="200px" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini" @click="handleEdit(scope.row)">
